@@ -28,7 +28,7 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 
 ### `lib/focus/focusable_action_bar.dart`
 - 1 import in coda.
-- L'`IconButton` predefinito delle azioni è avvolto in `BombGlassSurface.circle(diameter: 48)`; le azioni con `child` o `builder` custom restano invariate.
+- La riga `Row` di tutte le azioni è avvolta in un solo `BombGlassSurface(borderRadius: 24)` (in `build`, dentro l'`AnimatedOpacity`): un unico modulo di vetro per tutti i pulsanti, anche quelli con `child`/`builder` custom (Watch Together, Companion Remote, menu profilo). Un solo pulsante = pillola tonda.
 
 ### `lib/widgets/search_input_field.dart`
 - 2 import in coda.
