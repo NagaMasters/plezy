@@ -1,177 +1,149 @@
 # BORDO — Plezy Glass (fork di edde746/plezy con Liquid Glass)
 
-Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file).
-Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi mia, da confermare · **[V]** = verificato.
+Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
+Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
+Ultimo aggiornamento: 2026-10-23, dopo il commit `4bef59ab7`.
 
 ---
 
 ## 1. Obiettivo e criteri di completamento
 
-**Obiettivo [D]**: fork personale di `edde746/plezy` che aggiunge l'effetto Liquid Glass alla barra di navigazione inferiore (portrait) con `liquid_glass_renderer`, restando facile da riallineare agli aggiornamenti upstream.
+**Obiettivo [D]**: fork personale di `edde746/plezy` (base: tag 2.24.0) con effetto Liquid Glass (`liquid_glass_renderer 1.0.0-dev.1`), facile da riallineare agli aggiornamenti upstream.
+**Perimetro originale**: solo la barra inferiore portrait. **Perimetro attuale [D]** (scelta di Riccardo, 2026-10-23): tutti i controlli flottanti (app bar, ricerca, chip, player mobile, barra inferiore e rail orizzontale), più tre funzioni: titoli del player cliccabili, copertina di stagione nella hero, ridisegno delle barre.
+**Principio guida [D]**: codice nuovo in `lib/bomb/`; nei file upstream solo agganci marcati `BOMB:` e registrati in `PATCHES.md`. Con l'estensione i file upstream toccati sono circa 20 (prima 3): più conflitti di rebase, rischio accettato.
 
-**Principio guida [D]**: toccare il meno possibile i file upstream, mai quelli "caldi". Il codice nuovo vive in `lib/bomb/`; nei file upstream solo righe di aggancio marcate `BOMB:` e registrate in `PATCHES.md`.
-
-**Criteri di "fatto" [D]** (§9):
-- [ ] `git diff <tag upstream>..bomb --stat` mostra solo: `lib/bomb/*`, `pubspec.yaml`, `pubspec.lock`, `AndroidManifest.xml`, `main_screen.dart`, `.github/workflows/bomb-*.yml`, `PATCHES.md`, `BORDO.md`
-- [ ] diff di `main_screen.dart` ≤ ~5 righe
-- [ ] `flutter analyze` senza nuovi warning rispetto al tag di partenza
-- [ ] `flutter build apk --release` ok con `BOMB_GLASS=true` e `false`
-- [ ] rebase a secco su `upstream/main` eseguito, conflitti riportati, branch temporaneo scartato
-- [ ] checklist sul telefono eseguita da Riccardo (vetro con rifrazione in scroll, ultime card non coperte, banda Reconnect leggibile, tema chiaro/scuro, fluidità, installazione accanto a Plezy ufficiale)
+**Criteri di "fatto"** (aggiornati al perimetro attuale):
+- [ ] `git diff 2.24.0..bomb --stat`: solo `lib/bomb/*`, i file elencati in `PATCHES.md`, `pubspec.*`, `AndroidManifest.xml`, `.github/workflows/bomb-*.yml`, `PATCHES.md`, `BORDO.md`. Qualsiasi altro file = errore
+- [ ] `flutter analyze` senza nuovi problemi rispetto al tag di partenza (oggi: 49 in `packages/*/test`, già presenti; non confrontato con un `analyze` sul tag pulito)
+- [ ] `flutter build apk --release` ok con `BOMB_GLASS=true` **e** `false` (la prova `false` è precedente alle estensioni: da rifare)
+- [ ] rebase a secco su `upstream/main` senza conflitti (fatto sui primi 5 commit, da rifare con tutti)
+- [ ] checklist sul telefono eseguita da Riccardo: vetro visibile, ultime card non coperte, banda Reconnect leggibile, tema chiaro e scuro, fluidità (soprattutto nel player), mini-player non sovrapposto, installazione accanto a Plezy ufficiale
+- [ ] workflow `bomb-build` e `bomb-sync` funzionanti, secrets caricati
 
 ## 2. Vincoli e preferenze
 
-**Regole non negoziabili [D]** (§0):
-1. Mai push su `edde746/plezy`, mai PR verso upstream.
-2. Nessuna riformattazione di file upstream.
-3. Nessun aggiornamento di dipendenze esistenti; `pubspec.lock` solo per il nuovo pacchetto.
-4. Nessun rinominare/spostare file, classi, funzioni upstream.
-5. Ogni riga toccata in upstream marcata `// BOMB:` (`<!-- BOMB: -->` XML, `# BOMB:` YAML) e registrata in `PATCHES.md`.
-6. Player video (`lib/screens/video_player/`, `lib/widgets/video_controls/`) fuori perimetro.
-7. Conflitto tra regole e codice reale → fermarsi e chiedere.
+**Regole non negoziabili [D]**: 1) mai push su `edde746/plezy`, mai PR verso upstream; 2) nessuna riformattazione dei file upstream; 3) nessun aggiornamento di dipendenze esistenti; 4) nessun rinominare/spostare file, classi o funzioni upstream; 5) ogni riga toccata in upstream marcata `BOMB:` e registrata in `PATCHES.md`; 7) conflitto tra regole e codice reale → fermarsi e chiedere.
+**Regola cambiata [D]**: la 6 (player fuori perimetro) e il divieto di toccare `lib/screens/*`, `lib/widgets/*`, `lib/focus/*` sono superati dalla scelta di Riccardo del 2026-10-23. Restano vietati: `lib/main.dart`, `android/app/build.gradle.kts`, `lib/theme/*`, `.github/workflows/` upstream.
+**Altre preferenze [D]**: commit in italiano con prefisso `bomb:`; un commit per passo; interruttore `BOMB_GLASS`; precache pigra dentro `lib/bomb/`; keystore mai generato né committato da me; non inventare parametri API; nessun controllo della UI del PC; non dichiarare install/avvii non verificati (AGENTS.md).
 
-**File upstream toccabili [D]** (§5): solo `pubspec.yaml` (1 riga), `AndroidManifest.xml` (1 blocco), `lib/screens/main_screen.dart` (2–3 righe in `_buildPortraitShell`).
-**Vietati [D]**: `lib/main.dart`, `android/app/build.gradle.kts`, `lib/theme/*`, `lib/navigation/*`, `mobile_navigation_rail.dart`, player, impostazioni, `.github/workflows/` upstream. Landscape/tablet (rail) invariato.
+## 3. Attività da fare
 
-**Altre preferenze [D]**: commit in italiano con prefisso `bomb:`; un commit per passo; interruttore `BOMB_GLASS` via `--dart-define`; un solo `LiquidGlassLayer`; niente animazioni continue; precache pigra dentro il wrapper; keystore mai generato né committato da me; non inventare parametri API (verificare su codice/README del pacchetto).
+**A. Prerequisiti** — [x] A1 gh · [x] A2 Flutter richiesto (3.47.1) · [x] A3 Java/SDK · [x] A4 report
+**B. Fork e branch** — [x] B1 fork · [x] B2 tag · [x] B3 `bomb` da 2.24.0 · [x] B4 workflow upstream (nessuno registrato nel fork; da ricontrollare dopo il primo push)
+**C. Misura file caldi** — [x] C1 · [x] C2 · [x] C3 confermata da Riccardo
+**D. Barra inferiore e agganci** — [x] D1 pacchetto · [x] D2 interruttore · [x] D3 wrapper · [x] D4 pubspec · [x] D5 manifest (poi corretto, vedi §6) · [x] D6 `main_screen.dart`
 
-**Regole di workspace (AGENTS.md) [D]**: nessun controllo della UI del PC; build via riga di comando; non dichiarare installazioni/avvii mai verificati con output; distinguere build Gradle/Flutter da sync IDE. Nota: le regole BombUI di AGENTS.md riguardano le app Compose, non questo progetto Flutter **[I]**.
-
-## 3. Attività da fare (ordinate, piccole, verificabili)
-
-Ordine da §10. Ogni voce ha il suo criterio di verifica.
-
-**A. Prerequisiti (§1)**
-- [x] A1. `gh auth status` → account di Riccardo, scope `repo` e `workflow`
-- [x] A2. Leggere `FLUTTER_VERSION` da `.github/workflows/build.yml` upstream; verificare Flutter/FVM installato in quella versione (≥ 3.47)
-- [x] A3. Verificare Android SDK e Java come da progetto
-- [x] A4. Riportare cosa manca con il comando esatto di installazione e attendere
-
-**B. Fork e branch (§2)**
-- [x] B1. `gh repo fork edde746/plezy --clone --remote`; `git remote -v` (origin = fork, upstream = edde746)
-- [x] B2. `git fetch upstream --tags`; individuare ultimo tag di release `X.Y.Z`
-- [x] B3. Creare `bomb` dall'ultimo tag; `main` resta specchio di `upstream/main`
-- [x] B4. Disattivare nel fork i workflow upstream (`build.yml`, `ci.yml`, `update-packages.yml` + eventuali altri trovati in `ls .github/workflows`)
-
-**C. Misura file caldi (§3)**
-- [x] C1. Rifare la misura dei commit dal 2026-06-01 sui file elencati
-- [x] C2. Misurare le modifiche a `_buildPortraitShell`
-- [x] C3. **Mostrare la tabella aggiornata e aspettare conferma** prima di scrivere codice
-
-**D. Codice in `lib/bomb/` (§4) e agganci (§5)**
-- [x] D1. Installare `liquid_glass_renderer` (ultima versione disponibile), leggere README/API reale della versione
-- [x] D2. `bomb_glass.dart` con `kBombGlassEnabled`
-- [x] D3. `bomb_glass_nav_bar.dart`: layer unico, pillola `LiquidRoundedSuperellipse`, margine + `MediaQuery.paddingOf(context).bottom`, `NavigationBarTheme` locale trasparente, gestione banda Reconnect
-- [x] D4. Aggancio `pubspec.yaml` (1 riga in coda a `dependencies`) + `flutter pub get`; controllare che `pubspec.lock` non aggiorni altro
-- [x] D5. Aggancio `AndroidManifest.xml` (Flutter GPU); verificare che Impeller non sia disattivato
-- [x] D6. Aggancio `main_screen.dart` (`extendBody: true`, wrapper su `bottomNavigationBar`, import in fondo); eventuali correzioni di padding/misure dentro `lib/bomb/`
+**D2. Estensione (richiesta di Riccardo)**
+- [x] Back button, tutti gli stili (`app_bar_back_button.dart`)
+- [x] Action bar in un solo modulo, con opzione `bombGlass` (`focusable_action_bar.dart`; spento in `mini_player.dart` e `queue_sheet.dart`)
+- [x] Barra di ricerca (`search_input_field.dart`)
+- [x] Chip di filtro e di scelta (`focus_builders.dart`; striscia dei tab con un layer condiviso)
+- [x] Riga azioni della schermata film/serie con pulsanti traslucidi (`media_detail/action_buttons.dart`)
+- [x] Back del telecomando (`mobile_remote_screen.dart`)
+- [x] Player mobile: pulsanti circolari, back, gruppo tracce/capitoli, in vetro `clear`
+- [x] Barra inferiore ridisegnata a capsula (altezza 64, raggio misurato, indicatore a capsula)
+- [x] Rail orizzontale a capsula verticale (`mobile_navigation_rail.dart`, `BombGlassRail`)
+- [x] Titoli del player cliccabili: serie → pagina della serie; riga episodio → pagina dell'episodio (`video_controls_header.dart`)
+- [x] Copertina di stagione nella hero della home, solo in portrait (`discover_screen.dart`)
+- [ ] Sheet e menu a comparsa (`overlay_sheet.dart`): da decidere come con Riccardo
+- [ ] Barra del tempo del player, back della `BottomSheetHeader`, player desktop (`desktop_video_controls.dart`)
+- [ ] Pulsanti senza vetro in altre schermate, se segnalati
 
 **E. Identità e workflow (§6–7)**
-- [x] E1. (ID confermato: `it.bomb.plezyglass`) Chiedere a Riccardo l'`applicationId` (proposta `it.bomb.plezyglass`)
-- [ ] E2. Individuare dove è definita l'etichetta app e come `build.gradle.kts` carica la firma
-- [ ] E3. `bomb-build.yml` (sostituzione ID/nome in CI con fallimento esplicito se la stringa manca; build release split-per-abi; Release `bomb-<versione>-<n>`)
-- [ ] E4. `bomb-sync.yml` (ff di `main`, rebase di `bomb` sul nuovo tag, `--force-with-lease`, issue in caso di conflitto, mai risolvere in automatico)
-- [ ] E5. Spiegare a Riccardo generazione keystore e secrets (`BOMB_KEYSTORE_BASE64`, `BOMB_KEYSTORE_PASSWORD`, `BOMB_KEY_ALIAS`, `BOMB_KEY_PASSWORD`)
+- [x] E1 `applicationId` = `it.bomb.plezyglass` [D]
+- [ ] E2 etichetta app (`android:label="Plezy"`, riga 35 del manifest) e firma (`key.properties`) — già letti, da trasferire nel workflow
+- [ ] E3 `bomb-build.yml`: sostituire in CI `applicationId`, label e le authority (`com.edde746.plezy.fileprovider`, `com.edde746.plezy.systemshelf.artwork` in manifest + 2 file Kotlin), generare `key.properties` dai secrets, fallire se una stringa non c'è, pubblicare Release `bomb-<versione>-<n>`
+- [ ] E4 `bomb-sync.yml`: ff di `main`, rebase di `bomb` sul nuovo tag, `--force-with-lease`, issue in caso di conflitto, mai risolvere in automatico
+- [ ] E5 spiegare a Riccardo keystore e secrets (`BOMB_KEYSTORE_BASE64`, `BOMB_KEYSTORE_PASSWORD`, `BOMB_KEY_ALIAS`, `BOMB_KEY_PASSWORD`)
+- [ ] E6 primo push di `bomb` (e `main` come specchio) sul fork `NagaMasters/plezy` — solo con ok di Riccardo
 
-**F. Documentazione (§8)**
-- [x] F1. `PATCHES.md` (file, funzione, righe esatte, motivo)
-- [ ] F2. Spostare/aggiornare questo `BORDO.md` nel repo del fork e tenerlo aggiornato a fine di ogni sessione
-
-**G. Verifica e consegna (§9)**
-- [~] G1. Criteri della sezione 1 (diff, analyze, build true/false, rebase a secco)
-- [ ] G2. Riepilogo finale: link al fork, elenco commit, cosa deve fare Riccardo (secrets, test su telefono)
+**F. Documentazione** — [x] F1 `PATCHES.md` · [x] F2 `BORDO.md` nel repo, committato e riscritto il 2026-10-23
+**G. Verifica e consegna** — [ ] G1 criteri della sezione 1 · [ ] G2 riepilogo finale (link al fork, commit, cosa fa Riccardo)
 
 ## 4. Attività completate e verifiche
 
 | Data | Attività | Verifica |
 |---|---|---|
-| 2026-10-23 | Letto `prompt-plezy-liquid-glass.md`; creato questo `BORDO.md` | Il file esiste; nessun fork creato |
-| 2026-10-23 | A1 `gh` | **[V]** Account `NagaMasters`, scope `repo` e `workflow` presenti |
-| 2026-10-23 | A2 Flutter richiesto | **[V]** `FLUTTER_VERSION: "3.47.1"` in `build.yml` upstream |
-| 2026-10-23 | Flutter 3.47.1 | **[V]** `choco install fvm` fallito (serve admin). Installato con `git clone --branch 3.47.1` in `C:\Users\alema\flutter-3.47.1`; `flutter --version` → 3.47.1, Dart 3.13.1. Non nel PATH |
-| 2026-10-23 | B1–B3 fork e branch | **[V]** Fork `NagaMasters/plezy` in `AndroidStudio\plezy`; `origin` = fork, `upstream` = edde746; `bomb` creato dal tag 2.24.0 (76498a6f1). `main` locale = `cd0a2dff5`, nessun commit nostro |
-| 2026-10-23 | B4 workflow upstream | **[V]** `gh workflow disable` → 404; `gh api .../actions/workflows` → 0 workflow nel fork (GitHub non li ha attivati). Da ricontrollare dopo il primo push di `bomb` |
-| 2026-10-23 | C1–C2 misura file caldi | **[V]** Tabella qui sotto: numeri identici al prompt |
-| 2026-10-23 | A3 Java/SDK | **[V]** Java Temurin 21.0.12; Android SDK in `%LOCALAPPDATA%\Android\Sdk` (platform-tools, platforms 34–37.1, NDK 25/27/28). `ANDROID_HOME` non impostata |
+| 2026-10-23 | A1–A3 | **[V]** `gh` come `NagaMasters` con scope `repo` e `workflow`; Flutter richiesto 3.47.1; Java Temurin 21.0.12; Android SDK con piattaforme 34–37.1 |
+| 2026-10-23 | Flutter 3.47.1 | **[V]** `choco install fvm` fallito (serve admin); installato con `git clone --branch 3.47.1` in `C:\Users\alema\flutter-3.47.1` (non nel PATH) |
+| 2026-10-23 | CMake 4.1.2 | **[V]** mancava nell'SDK, la build falliva; installato con `sdkmanager` |
+| 2026-10-23 | B1–B3 | **[V]** `origin` = `NagaMasters/plezy`, `upstream` = edde746; `bomb` da 2.24.0 (76498a6f1) |
+| 2026-10-23 | C | **[V]** numeri identici al prompt (tabella sotto) |
+| 2026-10-23 | D1–D6 | **[V]** analyze pulito su `lib/bomb` e sui file toccati; build release arm64 `true` e `false` riuscite (prima delle estensioni) |
+| 2026-10-23 | Install sul telefono SM-S931B | **[V]** `adb install` Success, `MainActivity` in primo piano, nessun FATAL; Plezy ufficiale ancora installato. Build locale con `applicationId`/label/authority cambiati solo temporaneamente, firma debug (script nello scratchpad, non nel repo) |
+| 2026-10-23 | Flutter GPU | **[V]** log temporaneo: dopo lo spostamento a livello `<application>`, `gpuRendererCached=true` |
+| 2026-10-23 | Player e vetro | **[V]** dal codice (`PlayerSurfaceHost.kt`): il video sta in `SurfaceView` nativi sotto Flutter, non campionabili; per questo i comandi usano il preset `clear` |
+| 2026-10-23 | Indagine Fullmetal Alchemist | **[V]** log temporaneo (non committato): a Plezy Glass arrivano gli ID giusti (Brotherhood 40918/40971, 2003 47640); lo scambio non si è più ripetuto, causa non identificata. Su BOMBFLIX Brotherhood è in due librerie (2 e 3) |
+| 2026-10-23 | Prova visiva | **[non fatta da me]** Riccardo ha visto vetro, forme, rail e player e ha confermato "così va bene" su più punti; mancano tema chiaro e le verifiche di §1 |
 
 **Tabella file caldi (commit upstream dal 2026-06-01, base 2.24.0)**
 
-| File / cartella | Commit | Classe |
-|---|---|---|
-| `lib/screens/video_player/` | 221 | vietato |
-| `lib/widgets/video_controls/` | 181 | vietato |
-| `pubspec.yaml` | 88 | solo 1 riga in coda |
-| `lib/main.dart` | 86 | vietato |
-| `lib/screens/main_screen.dart` | 64 | solo aggancio minimo |
-| `android/app/build.gradle.kts` | 27 | vietato |
-| `AndroidManifest.xml` | 15 | 1 blocco marcato |
-| `lib/theme/mono_theme.dart` | 9 | non toccare |
-| `lib/theme/mono_tokens.dart` | 5 | non toccare |
-| `lib/navigation/navigation_tabs.dart` | 5 | non toccare |
-| `lib/widgets/mobile_navigation_rail.dart` | 1 | non toccare |
-| `_buildPortraitShell` (`git log -L`) | 6 | accettabile per 2–3 righe |
-
-**Sessione D (codice e agganci)**
-
-| Attività | Verifica |
+| File / cartella | Commit |
 |---|---|
-| D1 pacchetto | **[V]** `liquid_glass_renderer 1.0.0-dev.1` (ultima su pub.dev), README letto. `pubspec.lock`: solo aggiunte (+ vincolo `dart: <3.14.0` imposto dal pacchetto) |
-| D2-D3 `lib/bomb/` | **[V]** `flutter analyze lib/bomb` senza avvisi. API usate lette dal sorgente: `LiquidGlassLayer(settings)`, `LiquidGlass(shape, child)`, `LiquidRoundedSuperellipse(borderRadius)`, `LiquidGlassSettings.ios27Regular(brightness:)`, `LiquidGlass.precache()` |
-| D4-D6 agganci | **[V]** `pubspec.yaml` +1 riga; manifest +4 righe; `main_screen.dart` +5/-1. Analyze su `main_screen.dart` pulito |
-| Build release arm64 `BOMB_GLASS=true` | **[V]** APK 178,6 MB generato. Prima volta fallita: mancava CMake 4.1.2 nell'SDK, installato con `sdkmanager` |
-| Build release arm64 `BOMB_GLASS=false` | **[V]** APK 178,2 MB generato |
-| `flutter analyze` completo | **[V]** 49 problemi, tutti in `packages/*/test` (già presenti, estranei); 0 in `lib/`. Non confrontato con un `analyze` eseguito sul tag pulito |
-| Rebase a secco su `upstream/main` | **[V]** 5 commit riapplicati senza conflitti; branch temporaneo eliminato |
-| `git diff 2.24.0..bomb --stat` | **[V]** Solo file ammessi (BORDO.md si aggiunge col commit) |
-| Install su telefono (SM-S931B) | **[V]** APK locale `it.bomb.plezyglass` firmato con la debug key; `adb install` → Success; Plezy ufficiale (`com.edde746.plezy`) ancora installato. Avvio con `monkey`: `MainActivity` in primo piano, pid presente, nessun FATAL nel logcat. Build locale con 4 file modificati solo temporaneamente e poi ripristinati (repo pulito) |
-| Prova visiva del vetro | **[non fatta]** tocca a Riccardo (checklist §9.6) |
-
-**Estensione del perimetro (2026-10-23, richiesta di Riccardo)**: vetro su tutti i controlli flottanti (app bar, ricerca, chip, player, altre schermate). Prima iterazione fatta: back button (circular/plain), pulsanti `FocusableActionBar`, `SearchInputField`. Seconda e terza iterazione (2026-10-23): action bar in un solo modulo (`bombGlass` disattivabile), pulsanti traslucidi nella schermata film/serie, back del telecomando, chip (`FocusBuilders.buildFocusableChip`, striscia tab con layer condiviso), player mobile (pulsanti circolari, back, tracce/capitoli). Tutto compilato e installato sul telefono (ultimo commit `c0372f4cf`); prova visiva da fare. **Quarta iterazione**: comandi del player in vetro `clear` (il video è in `SurfaceView` nativi sotto Flutter: non campionabile); barra inferiore ridisegnata a capsula (altezza 64, raggio misurato, indicatore a capsula); barra in orizzontale a capsula verticale (`BombGlassRail`); titoli del player cliccabili (serie/episodio); copertina di stagione nella hero della home (solo portrait). Da verificare a vista. **Non fatti**: sheet/menu (`overlay_sheet.dart`, angoli solo sopra e superficie grande: da decidere), `desktop_video_controls.dart`, barra del tempo del player, back della `BottomSheetHeader`.
+| `lib/screens/video_player/` | 221 |
+| `lib/widgets/video_controls/` | 181 |
+| `pubspec.yaml` | 88 |
+| `lib/main.dart` | 86 |
+| `lib/screens/main_screen.dart` | 64 |
+| `lib/screens/discover_screen.dart` | 61 |
+| `lib/screens/libraries/libraries_screen.dart` | 30 |
+| `android/app/build.gradle.kts` | 27 |
+| `lib/widgets/overlay_sheet.dart` | 17 |
+| `AndroidManifest.xml` | 15 |
+| `lib/focus/focusable_action_bar.dart` | 8 |
+| `lib/widgets/focus_builders.dart` | 5 |
+| `app_bar_back_button.dart`, `desktop_app_bar.dart` | 4 |
+| `focusable_filter_chip.dart` | 2 |
+| `mobile_navigation_rail.dart` | 1 |
 
 ## 5. Decisioni e motivazioni
 
 | # | Decisione | Tipo | Motivazione |
 |---|---|---|---|
-| 1 | Codice nuovo solo in `lib/bomb/` | [D] | Upstream non lo toccherà: niente conflitti di rebase |
-| 2 | Base = ultimo tag di release, non `main` | [D] | Release più stabili; un rebase per release invece che per commit |
-| 3 | `main` = specchio, `bomb` = tag + patch | [D] | Riallineo semplice con `rebase --onto` |
-| 4 | Interruttore `--dart-define=BOMB_GLASS` | [D] | Non toccare le schermate di impostazioni; build "pulita" per confronto |
-| 5 | Tema barra sovrascritto localmente con `NavigationBarTheme` | [D] | Non modificare `mono_theme.dart` |
-| 6 | ID/nome app cambiati in CI, non nel repo | [D] | `build.gradle.kts` cambia spesso (27 commit) |
-| 7 | Niente precache in `main.dart` | [D] | File caldissimo (86 commit) |
-| 8 | `BORDO.md` spostato nella radice del repo `plezy` (non ancora committato) | [D] | Posizione del repo confermata da Riccardo |
-| 14 | Perimetro esteso: anche schermate e player, a partire da pulsanti app bar e ricerca; poi chip e sheet | [D] | Risposta di Riccardo; **supera** le regole §0.6 e §5.4 del prompt (player e file caldi vietati). Rischio accettato: più conflitti di rebase, vedi PATCHES.md |
-| 15 | Un `BombGlassSurface` con layer proprio per controllo | [I] | Più semplice; costo prestazionale da valutare (ogni layer copia lo sfondo). Se la fluidità cala, raggruppare in layer condivisi |
-| 11 | Pillola flottante: margine 16 laterale, 8 sotto + inset di sistema fuori dal vetro; `removePadding(bottom)` dentro | [I] | Il prompt chiede la pillola staccata dai bordi che rispetta `paddingOf.bottom`; i valori 16/8/28 sono miei, non indicati dal prompt |
-| 12 | Banda Reconnect dentro il vetro (il wrapper avvolge tutta la `Column`) | [I] | Aggancio minimo; leggibilità da provare sul telefono |
-| 13 | Colore vetro da `Theme.of(context).brightness` | [I] | Segue il tema dell'app, non quello di sistema |
-| 10 | Flutter 3.47.1 via `git clone` invece di FVM | [I] | `choco` senza admin; stessa versione esatta richiesta dal prompt. Riccardo ha detto "fai pure tu" sull'installazione |
-| 9 | Le cifre della tabella file caldi (23/10/2026) sono solo riferimento | [D] | Vanno rimisurate (C1) |
+| 1 | Codice nuovo solo in `lib/bomb/` | [D] | Upstream non lo toccherà |
+| 2 | Base = ultimo tag di release (2.24.0) | [D] | Un rebase per release |
+| 3 | `main` specchio, `bomb` = tag + patch | [D] | Riallineo con `rebase --onto` |
+| 4 | Interruttore `--dart-define=BOMB_GLASS` | [D] | Build "pulita" per confronto |
+| 5 | Tema delle barre sovrascritto in locale | [D] | Non toccare `lib/theme/*` |
+| 6 | ID, label e authority cambiati in CI, non nel repo | [D] | `build.gradle.kts` cambia spesso (27 commit) |
+| 7 | `applicationId` = `it.bomb.plezyglass` | [D] | Scelta di Riccardo |
+| 8 | Repo in `C:\Users\alema\Desktop\AndroidStudio\plezy` | [D] | Scelta di Riccardo |
+| 9 | Perimetro esteso a schermate e player; prima app bar e ricerca, poi chip e sheet | [D] | Richiesta di Riccardo; supera le regole §0.6 e §5.4 del prompt |
+| 10 | Flutter 3.47.1 via `git clone` invece di FVM | [I] | `choco` richiede admin; stessa versione |
+| 11 | Barra inferiore: capsula alta 64, margini 24 laterali e 12 sotto, indicatore `onSurface` 12%, raggio = metà dell'altezza misurata | [I] | Valori miei; Riccardo ha chiesto una forma più precisa e proporzionata |
+| 12 | Banda Reconnect dentro il vetro | [I] | Aggancio minimo; leggibilità da provare offline |
+| 13 | Colore del vetro dal tema dell'app (`Theme.brightness`) | [I] | Segue il tema scelto nell'app |
+| 14 | Un layer per controllo (`BombGlassSurface`); la riga azioni è un solo modulo; chip della striscia in un layer condiviso | [I] | Semplicità; se cala la fluidità, raggruppare |
+| 15 | Ombra di esempio del README del pacchetto sul vetro | [I] | Il vetro su sfondo piatto era quasi invisibile |
+| 16 | Comandi del player in vetro `clear` | [I] | Il video non è campionabile dal vetro: poca tinta, resta il bordo |
+| 17 | Titoli del player: chiudere con `onBack` (progresso e teardown regolari) e poi aprire la pagina | [I] | Evita video che continua dietro; la pagina sotto può risultare duplicata |
+| 18 | Copertina di stagione solo con hero verticale (aspect < 1.0), con fallback agli sfondi | [I] | Un poster 2:3 in un hero largo verrebbe tagliato |
 
 ## 6. Blocchi e domande aperte
 
-**Domande per Riccardo (le sole che oggi servono)**
-Nessuna aperta. Risolte: `applicationId` = `it.bomb.plezyglass` **[D]**; repo clonato in `C:\Users\alema\Desktop\AndroidStudio\plezy` **[D]**.
+**Correzioni di rotta rispetto al prompt**
+- §5.2: `EnableFlutterGPU` va a livello `<application>`, non dentro l'`<activity>`: nell'activity il motore lo ignorava e il vetro usava FakeGlass (barra opaca). Corretto e verificato.
+- §6: oltre a `applicationId` e label vanno sostituite le authority dei provider, altrimenti l'install accanto a Plezy ufficiale fallisce (`INSTALL_FAILED_CONFLICTING_PROVIDER`). Inoltre senza `key.properties` la release esce **non firmata**, contrariamente al commento in `build.gradle.kts`.
 
-**Da verificare (non sono domande, ma ipotesi) [I]**
-- Il PC ha `gh`, Flutter/FVM, Android SDK e Java configurati; nessuna verifica ancora fatta.
-- Le misure sui file caldi e la versione di `liquid_glass_renderer` (`^1.0.0-dev.1`) sono quelle del prompt, potrebbero essere cambiate.
-- `extendBody: true` potrebbe alterare misure di `_navBarKey` o padding liste (da risolvere in `lib/bomb/`, se capita).
+**Da provare sul telefono**
+- Mini-player sovrapposto alla capsula in basso (`_navBarKey` misura solo la `Column`).
+- Banda Reconnect leggibile con l'app offline.
+- Tema chiaro; fluidità nel player con più layer attivi.
+- Valori della capsula (decisione 11).
+- Rail orizzontale: i contenuti stanno accanto, non dietro, quindi poca rifrazione.
 
-**Correzione di rotta (2026-10-23)**: il prompt (§5.2) metteva `EnableFlutterGPU` dentro la `<activity>`; sul telefono il log diceva `Flutter GPU must be enabled via ... metadata` e il vetro usava FakeGlass (da qui la barra "opaca"). Spostato a livello `<application>` (come l'esempio del pacchetto): log `gpuRendererCached=true` = renderer GPU creato. **[V]** tramite log temporaneo (non committato). Resta da vedere a occhio se la rifrazione è visibile.
+**Rischi**
+- File upstream molto attivi toccati (`discover_screen.dart` 61 commit, `video_controls_header.dart` e altri nel player): conflitti attesi a ogni rebase.
+- Scambio Brotherhood/2003 visto una volta: non riprodotto, causa ignota.
 
-**Scoperta per la CI (§6)**: oltre a `applicationId` e label, vanno sostituite anche le authority dei provider, altrimenti l'install accanto a Plezy ufficiale fallisce con `INSTALL_FAILED_CONFLICTING_PROVIDER`: `com.edde746.plezy.fileprovider` e `com.edde746.plezy.systemshelf.artwork` in `AndroidManifest.xml`, `ExternalPlayerChannel.kt`, `SystemShelfArtworkProvider.kt`. Inoltre senza `key.properties` la release esce **non firmata** (contrariamente al commento in `build.gradle.kts`): la CI deve generare `key.properties` dai secrets.
-
-**Blocchi**: nessuno bloccante. Aperti da provare sul telefono:
-- `_navBarKey` misura solo la `Column`: con la pillola flottante il mini-player potrebbe sovrapporsi al margine/inset sotto (circa 8 px + inset di sistema). Se confermato, correggere dentro `lib/bomb/`.
-- Banda Reconnect dentro il vetro: leggibilità.
-- Valori 16/8/28 della pillola (decisione 11) da confermare a vista.
-- `main_screen.dart` è +5/-1 righe: ai limiti del "~5" richiesto.
+**Domande aperte per Riccardo**
+- Come vuole le sheet e i menu a comparsa (vetro a tutta sheet o solo header/pulsanti)?
+- Va bene fare il primo push del branch `bomb` sul fork?
+- Vuole generare lui il keystore con i comandi che gli darò?
 
 ## 7. Stato attuale e prossima azione
 
-**Stato attuale (2026-10-23)**: wrapper e agganci fatti e compilano (release arm64, true e false), rebase a secco senza conflitti. Commit locali su `bomb`, **nessun push**. Workflow CI (E3-E4), keystore/secrets (E5) e prova sul telefono non fatti.
-**Versione upstream di base**: 2.24.0 **[V]**.
-**Versione `liquid_glass_renderer`**: 1.0.0-dev.1 **[V]**.
+**Stato**: barra inferiore e rail orizzontale a capsula; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 12 commit locali su `bomb`, **nessun push**. Workflow CI, keystore e secrets non fatti.
+**Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
-**Prossima azione**: Riccardo prova il vetro sul telefono (checklist §9.6) e riporta cosa vede; poi workflow (E2-E5) tenendo conto della scoperta sopra.
+**Prossima azione**: Riccardo risponde sulle domande aperte; poi E2–E5 (workflow e secrets), E6 (push), le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).
