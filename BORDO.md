@@ -55,7 +55,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 - [x] E3 (scritto, **non ancora eseguito su GitHub**) `bomb-build.yml`: sostituire in CI `applicationId`, label e le authority (`com.edde746.plezy.fileprovider`, `com.edde746.plezy.systemshelf.artwork` in manifest + 2 file Kotlin), generare `key.properties` dai secrets, fallire se una stringa non c'è, pubblicare Release `bomb-<versione>-<n>`
 - [x] E4 (scritto, **non ancora eseguito su GitHub**) `bomb-sync.yml`: ff di `main`, rebase di `bomb` sul nuovo tag, `--force-with-lease`, issue in caso di conflitto, mai risolvere in automatico
 - [ ] E5 spiegare a Riccardo keystore e secrets (`BOMB_KEYSTORE_BASE64`, `BOMB_KEYSTORE_PASSWORD`, `BOMB_KEY_ALIAS`, `BOMB_KEY_PASSWORD`)
-- [ ] E6 primo push di `bomb` (e `main` come specchio) sul fork `NagaMasters/plezy` — solo con ok di Riccardo
+- [x] E6 push di `bomb` sul fork `NagaMasters/plezy` con ok di Riccardo (2026-10-23); `bomb` impostato come branch predefinito; workflow upstream `Build`, `CI - Sanity Checks`, `Update Packages` disattivati. `main` non toccato (resta lo specchio, il sync lo allinea)
 
 **F. Documentazione** — [x] F1 `PATCHES.md` · [x] F2 `BORDO.md` nel repo, committato e riscritto il 2026-10-23
 **G. Verifica e consegna** — [ ] G1 criteri della sezione 1 · [ ] G2 riepilogo finale (link al fork, commit, cosa fa Riccardo)
@@ -75,6 +75,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 | 2026-10-23 | Player e vetro | **[V]** dal codice (`PlayerSurfaceHost.kt`): il video sta in `SurfaceView` nativi sotto Flutter, non campionabili; per questo i comandi usano il preset `clear` |
 | 2026-10-23 | Indagine Fullmetal Alchemist | **[V]** log temporaneo (non committato): a Plezy Glass arrivano gli ID giusti (Brotherhood 40918/40971, 2003 47640); lo scambio non si è più ripetuto, causa non identificata. Su BOMBFLIX Brotherhood è in due librerie (2 e 3) |
 | 2026-10-23 | E2–E4 workflow | **[V]** YAML valido (`yaml.safe_load`); lo script di sostituzione di `bomb-build.yml` provato su una copia dei file: trova tutte le stringhe (1 `applicationId`, 1 label, 2 authority nel manifest, 1 per file Kotlin) e le cambia. **[non verificato]** esecuzione reale su GitHub Actions |
+| 2026-10-23 | Primo run di `Bomb build` su GitHub (run 40029379003) | **[V]** riusciti: checkout, lettura di `FLUTTER_VERSION`, Java, Flutter, sostituzione di id/label/authority. Fallito come previsto al passo di firma per i secrets mancanti (errore chiaro). Non ancora provati: pub get, analyze, build APK, Release, `bomb-sync` |
 | 2026-10-23 | Prova visiva | **[non fatta da me]** Riccardo ha visto vetro, forme, rail e player e ha confermato "così va bene" su più punti; mancano tema chiaro e le verifiche di §1 |
 
 **Tabella file caldi (commit upstream dal 2026-06-01, base 2.24.0)**
@@ -155,4 +156,4 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 **Stato**: barra inferiore (selezione che include icona e testo) e rail orizzontale a capsula; comandi del player in vetro trasparente non campionato; workflow `bomb-build` e `bomb-sync` scritti ma non eseguiti; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 16 commit locali su `bomb` rispetto al tag 2.24.0, **nessun push**. Workflow CI, keystore e secrets non fatti.
 **Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
-**Prossima azione**: Riccardo genera keystore e `BOMB_PAT` e dà l'ok al push (E5–E6); poi prima esecuzione dei workflow e correzioni, le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).
+**Prossima azione (aggiornata)**: Riccardo genera keystore e `BOMB_PAT` e li carica come secrets; poi rilancio `Bomb build` a mano e provo `Bomb sync`. Prima di allora i push su `bomb` fanno partire un run di build che fallisce per i secrets: usare `[skip ci]` nei commit. Poi: Riccardo genera keystore e `BOMB_PAT` e dà l'ok al push (E5–E6); poi prima esecuzione dei workflow e correzioni, le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).
