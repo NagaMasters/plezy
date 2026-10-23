@@ -79,6 +79,7 @@ import 'profile/profile_switch_screen.dart';
 import 'video_player_screen.dart';
 import 'profile/profile_teardown.dart';
 import '../watch_together/watch_together.dart';
+import '../bomb/bomb_glass_nav_bar.dart'; // BOMB: liquid glass
 
 /// Provides access to the main screen's focus control.
 // MainScreenFocusScope and SideNavigationBleedBuilder live in
@@ -2229,8 +2230,10 @@ class _MainScreenState extends State<MainScreen>
 
   Widget _buildPortraitShell(BuildContext context) {
     return Scaffold(
+      extendBody: true, // BOMB: il vetro deve avere contenuto da rifrangere
       body: _buildTickerAwareStack(),
-      bottomNavigationBar: Column(
+      bottomNavigationBar: BombGlassNavBar( // BOMB
+       child: Column(
         key: _navBarKey,
         mainAxisSize: .min,
         children: [
@@ -2282,6 +2285,7 @@ class _MainScreenState extends State<MainScreen>
           ),
         ],
       ),
+      ), // BOMB
     );
   }
 }
