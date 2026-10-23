@@ -13,12 +13,12 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 **Principio guida [D]**: codice nuovo in `lib/bomb/`; nei file upstream solo agganci marcati `BOMB:` e registrati in `PATCHES.md`. Con l'estensione i file upstream toccati sono circa 20 (prima 3): più conflitti di rebase, rischio accettato.
 
 **Criteri di "fatto"** (aggiornati al perimetro attuale):
-- [ ] `git diff 2.24.0..bomb --stat`: solo `lib/bomb/*`, i file elencati in `PATCHES.md`, `pubspec.*`, `AndroidManifest.xml`, `.github/workflows/bomb-*.yml`, `PATCHES.md`, `BORDO.md`. Qualsiasi altro file = errore
-- [ ] `flutter analyze` senza nuovi problemi rispetto al tag di partenza (oggi: 49 in `packages/*/test`, già presenti; non confrontato con un `analyze` sul tag pulito)
-- [ ] `flutter build apk --release` ok con `BOMB_GLASS=true` **e** `false` (la prova `false` è precedente alle estensioni: da rifare)
-- [ ] rebase a secco su `upstream/main` senza conflitti (fatto sui primi 5 commit, da rifare con tutti)
-- [ ] checklist sul telefono eseguita da Riccardo: vetro visibile, ultime card non coperte, banda Reconnect leggibile, tema chiaro e scuro, fluidità (soprattutto nel player), mini-player non sovrapposto, installazione accanto a Plezy ufficiale
-- [ ] workflow `bomb-build` e `bomb-sync` funzionanti, secrets caricati
+- [x] `git diff 2.24.0..bomb --stat`: solo `lib/bomb/*`, i file elencati in `PATCHES.md`, `pubspec.*`, `AndroidManifest.xml`, `.github/workflows/bomb-*.yml`, `PATCHES.md`, `BORDO.md`. Qualsiasi altro file = errore
+- [x] `flutter analyze` senza nuovi problemi rispetto al tag di partenza (49 sul tag 2.24.0 pulito, 49 sul nostro branch, tutti in `packages/*/test`)
+- [x] `flutter build apk --release` ok con `BOMB_GLASS=true` **e** `false` (entrambe rifatte dopo le estensioni: arm64 178,6 MB e 178,2 MB)
+- [x] rebase a secco su `upstream/main` (21 commit avanti al tag): 1 solo conflitto, banale, in `pubspec.yaml` (upstream ha alzato `openwatchparty` sulla riga sopra la nostra); gli altri 25 commit puliti; dopo la risoluzione `pub get --enforce-lockfile` ok e `flutter analyze` pulito sui 23 file toccati
+- [~] checklist sul telefono eseguita da Riccardo: vetro, tema chiaro, banda offline, mini-player e fluidità nel player confermati; installazione accanto a Plezy ufficiale confermata; da guardare: aggiornamento di una Release sopra la precedente
+- [x] workflow `bomb-build` e `bomb-sync` funzionanti, secrets caricati (sync provato solo nel caso "già aggiornato")
 
 ## 2. Vincoli e preferenze
 
@@ -78,6 +78,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 | 2026-10-23 | Primo run di `Bomb build` su GitHub (run 40029379003) | **[V]** riusciti: checkout, lettura di `FLUTTER_VERSION`, Java, Flutter, sostituzione di id/label/authority. Fallito come previsto al passo di firma per i secrets mancanti (errore chiaro). Non ancora provati: pub get, analyze, build APK, Release, `bomb-sync` |
 | 2026-10-23 | `Bomb build` completo (run 40030660849) | **[V]** tutti i passi riusciti: pub get, analyze, APK per 3 architetture, Release `bomb-2.24.0-2` (arm64 101 MB, armeabi-v7a 97 MB, x86_64 110 MB). APK arm64 scaricato e controllato: firmato con `CN=Plezy Glass` (SHA-256 `02555cfe…a9dd2`), `package: it.bomb.plezyglass`, label `Plezy Glass`, versionName 2.24.0 |
 | 2026-10-23 | `Bomb sync` (run 40032174220) | **[V]** riuscito: `BOMB_PAT` presente, fast-forward di `main`, base di `bomb` = ultimo tag = 2.24.0, nessuna azione. **[non provato]** rebase su un tag nuovo |
+| 2026-10-24 | Verifiche finali G1 | **[V]** build `false` ok; analyze 49 = 49 col tag; rebase a secco: 1 conflitto banale in `pubspec.yaml`, il resto pulito, compila; diff vs tag: solo `lib/bomb/*` e i file elencati in `PATCHES.md`. Prove sul telefono di Riccardo: tema chiaro, banda offline, mini-player e fluidità del player ok |
 | 2026-10-23 | Prova visiva | **[non fatta da me]** Riccardo ha visto vetro, forme, rail e player e ha confermato "così va bene" su più punti; mancano tema chiaro e le verifiche di §1 |
 
 **Tabella file caldi (commit upstream dal 2026-06-01, base 2.24.0)**
