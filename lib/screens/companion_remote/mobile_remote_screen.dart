@@ -19,6 +19,7 @@ import '../../widgets/companion_remote/discovery_view.dart';
 import '../../widgets/app_icon.dart';
 import '../../widgets/overlay_sheet.dart';
 import '../../widgets/pill_input_decoration.dart';
+import '../../widgets/app_bar_back_button.dart'; // BOMB
 
 class MobileRemoteScreen extends StatefulWidget {
   const MobileRemoteScreen({super.key});
@@ -35,6 +36,8 @@ class _MobileRemoteScreenState extends State<MobileRemoteScreen> {
       canPop: true,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false, // BOMB: back con vetro
+          leading: Navigator.canPop(context) ? const AppBarBackButton(style: BackButtonStyle.plain) : null, // BOMB
           title: Text(t.companionRemote.title),
           actions: [
             Consumer<CompanionRemoteProvider>(
