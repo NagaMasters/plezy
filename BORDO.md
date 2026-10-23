@@ -126,7 +126,7 @@ Ordine da §10. Ogni voce ha il suo criterio di verifica.
 | Install su telefono (SM-S931B) | **[V]** APK locale `it.bomb.plezyglass` firmato con la debug key; `adb install` → Success; Plezy ufficiale (`com.edde746.plezy`) ancora installato. Avvio con `monkey`: `MainActivity` in primo piano, pid presente, nessun FATAL nel logcat. Build locale con 4 file modificati solo temporaneamente e poi ripristinati (repo pulito) |
 | Prova visiva del vetro | **[non fatta]** tocca a Riccardo (checklist §9.6) |
 
-**Estensione del perimetro (2026-10-23, richiesta di Riccardo)**: vetro su tutti i controlli flottanti (app bar, ricerca, chip, player, altre schermate). Prima iterazione fatta: back button (circular/plain), pulsanti `FocusableActionBar`, `SearchInputField`. Compilato e installato sul telefono; prova visiva da fare.
+**Estensione del perimetro (2026-10-23, richiesta di Riccardo)**: vetro su tutti i controlli flottanti (app bar, ricerca, chip, player, altre schermate). Prima iterazione fatta: back button (circular/plain), pulsanti `FocusableActionBar`, `SearchInputField`. Seconda e terza iterazione (2026-10-23): action bar in un solo modulo (`bombGlass` disattivabile), pulsanti traslucidi nella schermata film/serie, back del telecomando, chip (`FocusBuilders.buildFocusableChip`, striscia tab con layer condiviso), player mobile (pulsanti circolari, back, tracce/capitoli). Tutto compilato e installato sul telefono (ultimo commit `c0372f4cf`); prova visiva da fare. **Non fatti**: sheet/menu (`overlay_sheet.dart`, angoli solo sopra e superficie grande: da decidere), `desktop_video_controls.dart`, barra del tempo del player, back della `BottomSheetHeader`.
 
 ## 5. Decisioni e motivazioni
 
