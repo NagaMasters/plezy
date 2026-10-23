@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../i18n/strings.g.dart';
 import '../navigation/navigation_tabs.dart';
 import 'app_icon.dart';
+import '../bomb/bomb_glass_rail.dart'; // BOMB
 
 /// The mobile shell's navigation in landscape: the bottom [NavigationBar]'s
 /// destinations on a leading Material [NavigationRail], so a wide, short
@@ -57,7 +58,8 @@ class MobileNavigationRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedIndex = tabs.indexWhere((tab) => tab.id == selectedTab);
-    return LayoutBuilder(
+    return BombGlassRail( // BOMB: capsula di vetro verticale
+     child: LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final labelled = showLabels && labelsFit(destinations: tabs.length, hasLeading: isOffline, height: height);
@@ -79,6 +81,7 @@ class MobileNavigationRail extends StatelessWidget {
           ),
         );
       },
+    ), // BOMB
     );
   }
 
