@@ -8,6 +8,7 @@ import '../../../watch_together/widgets/watch_together_overlay.dart';
 import '../../../watch_together/providers/watch_together_provider.dart';
 import '../../app_bar_back_button.dart';
 import '../../system_clock.dart';
+import '../../../bomb/bomb_player_title_link.dart'; // BOMB
 
 /// Header layout style for video controls
 enum VideoHeaderStyle {
@@ -98,12 +99,15 @@ class VideoControlsHeader extends StatelessWidget {
       parts.add(itemTitle);
     }
 
-    return Text(
+    return BombPlayerTitleLink( // BOMB
+      metadata: metadata,
+      onBack: onBack,
+      child: Text(
       toBulletedString(parts),
       style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: .w500),
       maxLines: 1,
       overflow: .ellipsis,
-    );
+    ));
   }
 
   Widget _buildMultiLineTitle(String itemTitle) {
@@ -122,19 +126,26 @@ class VideoControlsHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        Text(
+        BombPlayerTitleLink( // BOMB: titolo serie -> pagina della serie
+          metadata: metadata,
+          onBack: onBack,
+          series: true,
+          child: Text(
           metadata.grandparentTitle ?? itemTitle,
           style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: .bold),
           maxLines: 1,
           overflow: .ellipsis,
-        ),
+        )),
         if (secondLineParts.isNotEmpty)
-          Text(
+          BombPlayerTitleLink( // BOMB: riga episodio -> pagina dell'episodio
+            metadata: metadata,
+            onBack: onBack,
+            child: Text(
             toBulletedString(secondLineParts),
             style: const TextStyle(color: Colors.white70, fontSize: 14),
             maxLines: 1,
             overflow: .ellipsis,
-          ),
+          )),
       ],
     );
   }
