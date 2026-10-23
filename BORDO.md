@@ -116,7 +116,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 | 13 | Colore del vetro dal tema dell'app (`Theme.brightness`) | [I] | Segue il tema scelto nell'app |
 | 14 | Un layer per controllo (`BombGlassSurface`); la riga azioni è un solo modulo; chip della striscia in un layer condiviso | [I] | Semplicità; se cala la fluidità, raggruppare |
 | 15 | Ombra di esempio del README del pacchetto sul vetro | [I] | Il vetro su sfondo piatto era quasi invisibile |
-| 16 | Comandi del player in vetro `clear` | [I] | Il video non è campionabile dal vetro: poca tinta, resta il bordo |
+| 16 | Comandi del player: superficie "vetro" senza campionamento (gradiente bianco 20%→5%, bordo 30%) invece del preset `clear` | [I] | Il preset `clear` restava opaco: dietro c'è solo trasparenza; valori di alfa miei |
 | 17 | Titoli del player: chiudere con `onBack` (progresso e teardown regolari) e poi aprire la pagina | [I] | Evita video che continua dietro; la pagina sotto può risultare duplicata |
 | 18 | Copertina di stagione solo con hero verticale (aspect < 1.0), con fallback agli sfondi | [I] | Un poster 2:3 in un hero largo verrebbe tagliato |
 
