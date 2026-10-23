@@ -129,12 +129,10 @@ class _AppBarBackButtonState extends State<AppBarBackButton> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(color: _hovered ? hover : base, shape: BoxShape.circle),
-              child: widget.style == BackButtonStyle.video // BOMB
-                  ? AppIcon(Symbols.arrow_back_rounded, fill: 1, color: icon, size: 20)
-                  : BombGlassSurface.circle(
-                      diameter: 40,
-                      child: AppIcon(Symbols.arrow_back_rounded, fill: 1, color: icon, size: 20),
-                    ),
+              child: BombGlassSurface.circle( // BOMB
+                diameter: 40,
+                child: AppIcon(Symbols.arrow_back_rounded, fill: 1, color: icon, size: 20),
+              ),
             ),
           ),
         ),

@@ -40,3 +40,9 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 - `lib/screens/media_detail/action_buttons.dart` (+ import in `lib/screens/media_detail_screen.dart`, file `part of`): sfondi dei pulsanti trasparenti con vetro attivo (`idleBg`, `FilledButton.styleFrom`, `IconButton.styleFrom`) e `foregroundColor` = `onSurface` per Play, così si vede il vetro della riga.
 - `lib/screens/companion_remote/mobile_remote_screen.dart`: `AppBar` con `automaticallyImplyLeading: false` + `AppBarBackButton(plain)` quando `Navigator.canPop`; import in coda.
 - `lib/widgets/focus_builders.dart` (`buildFocusableChip`): parametro `bombTinted`; il contenuto è avvolto in `BombGlassSurface.auto` con `AnimatedContainer` trasparente. Chiamanti: `focusable_filter_chip.dart` (`bombTinted: showFocus`) e `focusable_tab_chip.dart` (`bombTinted: isHighlighted`; `TabChipStrip` avvolge la riga in `BombGlassLayer`).
+
+### Player mobile (2026-10-23)
+- `lib/widgets/app_bar_back_button.dart`: vetro anche per lo stile `video` (ora tutti gli stili).
+- `lib/widgets/video_controls/widgets/circular_control_button.dart`: cerchio nero 50% sostituito da `BombGlassSurface(borderRadius: 100)` (decorazione nulla con vetro attivo); 2 import.
+- `lib/widgets/video_controls/widgets/track_chapter_controls.dart`: la riga dei pulsanti tracce/capitoli è avvolta in `BombGlassSurface(borderRadius: 20)`; 1 import.
+- Non toccati: `desktop_video_controls.dart`, barra del tempo, sheet del player, `overlay_sheet.dart`.
