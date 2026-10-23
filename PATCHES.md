@@ -46,3 +46,9 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 - `lib/widgets/video_controls/widgets/circular_control_button.dart`: cerchio nero 50% sostituito da `BombGlassSurface(borderRadius: 100)` (decorazione nulla con vetro attivo); 2 import.
 - `lib/widgets/video_controls/widgets/track_chapter_controls.dart`: la riga dei pulsanti tracce/capitoli è avvolta in `BombGlassSurface(borderRadius: 20)`; 1 import.
 - Non toccati: `desktop_video_controls.dart`, barra del tempo, sheet del player, `overlay_sheet.dart`.
+
+### Player e barra inferiore (2026-10-23, seconda passata)
+- Il video del player vive in `SurfaceView` nativi **sotto** la superficie Flutter (`PlayerSurfaceHost.kt`): il vetro non può campionarlo, il suo sfondo è trasparente. Per i comandi sopra il video si usa quindi il preset `ios27Clear` (`BombGlassSurface(clear: true)`): quasi nessun velo, resta il bordo con il riflesso. Nessuna rifrazione del video possibile.
+- `lib/widgets/app_bar_back_button.dart`: `clear: widget.style == BackButtonStyle.video`.
+- `lib/widgets/video_controls/widgets/circular_control_button.dart` e `track_chapter_controls.dart`: `clear: true`.
+- `lib/bomb/bomb_glass_nav_bar.dart` (nostro file): capsula con raggio = metà dell'altezza misurata, `NavigationBarTheme` locale con `height: 64`, indicatore a `StadiumBorder` (onSurface 12%), margini 24 ai lati e 12 sotto + inset di sistema. Nessun altro file upstream toccato.
