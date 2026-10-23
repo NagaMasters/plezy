@@ -22,10 +22,14 @@ class BombGlassNavBar extends StatefulWidget {
 }
 
 class _BombGlassNavBarState extends State<BombGlassNavBar> {
-  static const double _horizontalMargin = 24;
+  static const double _horizontalMargin = 16;
   static const double _bottomMargin = 12;
   static const double _barHeight = 64;
-  static const double _selectionInset = 6;
+  // Room between the bar's edge and the first/last destination, and how far the
+  // selection capsule extends past its destination so a label never touches its edge.
+  static const double _innerPadding = 8;
+  static const double _selectionOvershoot = 4;
+  static const double _selectionVerticalInset = 6;
 
   final _childKey = GlobalKey();
   double _radius = _barHeight / 2;
@@ -119,7 +123,8 @@ class _BombGlassNavBarState extends State<BombGlassNavBar> {
               removeBottom: true,
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final itemWidth = _destinationCount > 0 ? constraints.maxWidth / _destinationCount : 0.0;
+                  final itemWidth =
+                      _destinationCount > 0 ? (constraints.maxWidth - 2 * _innerPadding) / _destinationCount : 0.0;
                   final slot = selected == null ? 0 : (isRtl ? _destinationCount - 1 - selected : selected);
                   return Stack(
                     children: [
@@ -127,10 +132,10 @@ class _BombGlassNavBarState extends State<BombGlassNavBar> {
                         AnimatedPositioned(
                           duration: const Duration(milliseconds: 250),
                           curve: Curves.easeOutCubic,
-                          left: slot * itemWidth + _selectionInset,
-                          width: itemWidth - 2 * _selectionInset,
-                          bottom: _selectionInset,
-                          height: _navBarHeight - 2 * _selectionInset,
+                          left: _innerPadding + slot * itemWidth - _selectionOvershoot,
+                          width: itemWidth + 2 * _selectionOvershoot,
+                          bottom: _selectionVerticalInset,
+                          height: _navBarHeight - 2 * _selectionVerticalInset,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.12),
@@ -138,7 +143,12 @@ class _BombGlassNavBarState extends State<BombGlassNavBar> {
                             ),
                           ),
                         ),
-                      KeyedSubtree(key: _childKey, child: widget.child),
+                      // The destinations size their labels to the width they get, so the
+                      // padding here is what leaves the label room inside the selection.
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: _innerPadding),
+                        child: KeyedSubtree(key: _childKey, child: widget.child),
+                      ),
                     ],
                   );
                 },
