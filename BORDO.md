@@ -2,7 +2,7 @@
 
 Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
 Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
-Ultimo aggiornamento: 2026-10-23, dopo il commit `4bef59ab7`.
+Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 
 ---
 
@@ -143,7 +143,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `4bef59ab7`.
 
 ## 7. Stato attuale e prossima azione
 
-**Stato**: barra inferiore e rail orizzontale a capsula; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 12 commit locali su `bomb`, **nessun push**. Workflow CI, keystore e secrets non fatti.
+**Stato**: barra inferiore e rail orizzontale a capsula; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 16 commit locali su `bomb` rispetto al tag 2.24.0, **nessun push**. Workflow CI, keystore e secrets non fatti.
 **Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
 **Prossima azione**: Riccardo risponde sulle domande aperte; poi E2–E5 (workflow e secrets), E6 (push), le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).
