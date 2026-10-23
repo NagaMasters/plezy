@@ -123,7 +123,8 @@ Ordine da §10. Ogni voce ha il suo criterio di verifica.
 | `flutter analyze` completo | **[V]** 49 problemi, tutti in `packages/*/test` (già presenti, estranei); 0 in `lib/`. Non confrontato con un `analyze` eseguito sul tag pulito |
 | Rebase a secco su `upstream/main` | **[V]** 5 commit riapplicati senza conflitti; branch temporaneo eliminato |
 | `git diff 2.24.0..bomb --stat` | **[V]** Solo file ammessi (BORDO.md si aggiunge col commit) |
-| Telefono | **[non fatto]** nessun install/avvio, nessuna prova visiva |
+| Install su telefono (SM-S931B) | **[V]** APK locale `it.bomb.plezyglass` firmato con la debug key; `adb install` → Success; Plezy ufficiale (`com.edde746.plezy`) ancora installato. Avvio con `monkey`: `MainActivity` in primo piano, pid presente, nessun FATAL nel logcat. Build locale con 4 file modificati solo temporaneamente e poi ripristinati (repo pulito) |
+| Prova visiva del vetro | **[non fatta]** tocca a Riccardo (checklist §9.6) |
 
 ## 5. Decisioni e motivazioni
 
@@ -153,6 +154,8 @@ Nessuna aperta. Risolte: `applicationId` = `it.bomb.plezyglass` **[D]**; repo cl
 - Le misure sui file caldi e la versione di `liquid_glass_renderer` (`^1.0.0-dev.1`) sono quelle del prompt, potrebbero essere cambiate.
 - `extendBody: true` potrebbe alterare misure di `_navBarKey` o padding liste (da risolvere in `lib/bomb/`, se capita).
 
+**Scoperta per la CI (§6)**: oltre a `applicationId` e label, vanno sostituite anche le authority dei provider, altrimenti l'install accanto a Plezy ufficiale fallisce con `INSTALL_FAILED_CONFLICTING_PROVIDER`: `com.edde746.plezy.fileprovider` e `com.edde746.plezy.systemshelf.artwork` in `AndroidManifest.xml`, `ExternalPlayerChannel.kt`, `SystemShelfArtworkProvider.kt`. Inoltre senza `key.properties` la release esce **non firmata** (contrariamente al commento in `build.gradle.kts`): la CI deve generare `key.properties` dai secrets.
+
 **Blocchi**: nessuno bloccante. Aperti da provare sul telefono:
 - `_navBarKey` misura solo la `Column`: con la pillola flottante il mini-player potrebbe sovrapporsi al margine/inset sotto (circa 8 px + inset di sistema). Se confermato, correggere dentro `lib/bomb/`.
 - Banda Reconnect dentro il vetro: leggibilità.
@@ -165,4 +168,4 @@ Nessuna aperta. Risolte: `applicationId` = `it.bomb.plezyglass` **[D]**; repo cl
 **Versione upstream di base**: 2.24.0 **[V]**.
 **Versione `liquid_glass_renderer`**: 1.0.0-dev.1 **[V]**.
 
-**Prossima azione**: chiedere a Riccardo se installare l'APK sul telefono via `adb` (A-D sono pronti) oppure proseguire con i workflow (E2-E5).
+**Prossima azione**: Riccardo prova il vetro sul telefono (checklist §9.6) e riporta cosa vede; poi workflow (E2-E5) tenendo conto della scoperta sopra.
