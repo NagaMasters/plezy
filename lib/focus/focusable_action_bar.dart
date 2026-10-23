@@ -78,6 +78,9 @@ class FocusableActionBar extends StatefulWidget {
 
   final double spacing;
 
+  /// BOMB: wrap the row in a single Liquid Glass module. Off for bars that already sit on their own card.
+  final bool bombGlass;
+
   const FocusableActionBar({
     super.key,
     required this.actions,
@@ -88,6 +91,7 @@ class FocusableActionBar extends StatefulWidget {
     this.onBack,
     this.onFocusChange,
     this.spacing = 0,
+    this.bombGlass = true, // BOMB
   });
 
   @override
@@ -300,7 +304,7 @@ class FocusableActionBarState extends State<FocusableActionBar> {
     return AnimatedOpacity(
       opacity: isKeyboard && !_hasAnyFocus ? 0.6 : 1.0,
       duration: duration,
-      child: BombGlassSurface(borderRadius: 24, child: row), // BOMB: un solo modulo di vetro per tutta la riga
+      child: widget.bombGlass ? BombGlassSurface(borderRadius: 24, child: row) : row, // BOMB: un solo modulo di vetro per tutta la riga
     );
   }
 

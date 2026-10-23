@@ -4,6 +4,7 @@ import '../focus/focusable_chip_mixin.dart';
 import '../focus/input_mode_tracker.dart';
 import '../utils/platform_detector.dart';
 import 'focus_builders.dart';
+import '../bomb/bomb_glass_surface.dart'; // BOMB
 
 /// Horizontally scrollable host for a row of [FocusableTabChip]s.
 ///
@@ -21,7 +22,7 @@ class TabChipStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(mainAxisSize: .min, children: children),
+      child: BombGlassLayer(child: Row(mainAxisSize: .min, children: children)), // BOMB: un layer per tutta la striscia
     );
   }
 }
@@ -160,6 +161,7 @@ class _FocusableTabChipState extends State<FocusableTabChip> with FocusableChipS
       selected: widget.isSelected,
       padding: hasImage ? const EdgeInsets.all(8) : const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       backgroundColor: backgroundColor,
+      bombTinted: isHighlighted, // BOMB
       borderRadius: hasImage ? 12 : 20,
       child: hasImage
           ? Column(

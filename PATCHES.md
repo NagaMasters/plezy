@@ -33,3 +33,10 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 ### `lib/widgets/search_input_field.dart`
 - 2 import in coda.
 - `Stack` avvolto in `BombGlassSurface(borderRadius: 24)`; `fillColor` della decorazione trasparente quando il vetro è attivo (tocca solo questo campo, non `pillInputDecoration`).
+
+### Correzioni e chip (2026-10-23)
+- `lib/bomb/bomb_glass_surface.dart`: `BombGlassSurface` ora ha anche `.auto` (usa il layer condiviso, con `tint` opzionale) e `BombGlassLayer` (un layer per più forme); ombra del README del pacchetto per leggere il vetro su sfondi piatti.
+- `lib/focus/focusable_action_bar.dart`: parametro `bombGlass` (default `true`); `false` in `lib/widgets/music/mini_player.dart` e `lib/screens/music/queue_sheet.dart` (barre già dentro una card/sheet).
+- `lib/screens/media_detail/action_buttons.dart` (+ import in `lib/screens/media_detail_screen.dart`, file `part of`): sfondi dei pulsanti trasparenti con vetro attivo (`idleBg`, `FilledButton.styleFrom`, `IconButton.styleFrom`) e `foregroundColor` = `onSurface` per Play, così si vede il vetro della riga.
+- `lib/screens/companion_remote/mobile_remote_screen.dart`: `AppBar` con `automaticallyImplyLeading: false` + `AppBarBackButton(plain)` quando `Navigator.canPop`; import in coda.
+- `lib/widgets/focus_builders.dart` (`buildFocusableChip`): parametro `bombTinted`; il contenuto è avvolto in `BombGlassSurface.auto` con `AnimatedContainer` trasparente. Chiamanti: `focusable_filter_chip.dart` (`bombTinted: showFocus`) e `focusable_tab_chip.dart` (`bombTinted: isHighlighted`; `TabChipStrip` avvolge la riga in `BombGlassLayer`).
