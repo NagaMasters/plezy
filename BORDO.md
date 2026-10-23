@@ -51,9 +51,9 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 
 **E. Identità e workflow (§6–7)**
 - [x] E1 `applicationId` = `it.bomb.plezyglass` [D]
-- [ ] E2 etichetta app (`android:label="Plezy"`, riga 35 del manifest) e firma (`key.properties`) — già letti, da trasferire nel workflow
-- [ ] E3 `bomb-build.yml`: sostituire in CI `applicationId`, label e le authority (`com.edde746.plezy.fileprovider`, `com.edde746.plezy.systemshelf.artwork` in manifest + 2 file Kotlin), generare `key.properties` dai secrets, fallire se una stringa non c'è, pubblicare Release `bomb-<versione>-<n>`
-- [ ] E4 `bomb-sync.yml`: ff di `main`, rebase di `bomb` sul nuovo tag, `--force-with-lease`, issue in caso di conflitto, mai risolvere in automatico
+- [x] E2 etichetta (`android:label="Plezy"`, riga 35 del manifest) e firma (`android/key.properties` con `storeFile=upload-keystore.jks` relativo a `android/app`, come fa upstream)
+- [x] E3 (scritto, **non ancora eseguito su GitHub**) `bomb-build.yml`: sostituire in CI `applicationId`, label e le authority (`com.edde746.plezy.fileprovider`, `com.edde746.plezy.systemshelf.artwork` in manifest + 2 file Kotlin), generare `key.properties` dai secrets, fallire se una stringa non c'è, pubblicare Release `bomb-<versione>-<n>`
+- [x] E4 (scritto, **non ancora eseguito su GitHub**) `bomb-sync.yml`: ff di `main`, rebase di `bomb` sul nuovo tag, `--force-with-lease`, issue in caso di conflitto, mai risolvere in automatico
 - [ ] E5 spiegare a Riccardo keystore e secrets (`BOMB_KEYSTORE_BASE64`, `BOMB_KEYSTORE_PASSWORD`, `BOMB_KEY_ALIAS`, `BOMB_KEY_PASSWORD`)
 - [ ] E6 primo push di `bomb` (e `main` come specchio) sul fork `NagaMasters/plezy` — solo con ok di Riccardo
 
@@ -74,6 +74,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 | 2026-10-23 | Flutter GPU | **[V]** log temporaneo: dopo lo spostamento a livello `<application>`, `gpuRendererCached=true` |
 | 2026-10-23 | Player e vetro | **[V]** dal codice (`PlayerSurfaceHost.kt`): il video sta in `SurfaceView` nativi sotto Flutter, non campionabili; per questo i comandi usano il preset `clear` |
 | 2026-10-23 | Indagine Fullmetal Alchemist | **[V]** log temporaneo (non committato): a Plezy Glass arrivano gli ID giusti (Brotherhood 40918/40971, 2003 47640); lo scambio non si è più ripetuto, causa non identificata. Su BOMBFLIX Brotherhood è in due librerie (2 e 3) |
+| 2026-10-23 | E2–E4 workflow | **[V]** YAML valido (`yaml.safe_load`); lo script di sostituzione di `bomb-build.yml` provato su una copia dei file: trova tutte le stringhe (1 `applicationId`, 1 label, 2 authority nel manifest, 1 per file Kotlin) e le cambia. **[non verificato]** esecuzione reale su GitHub Actions |
 | 2026-10-23 | Prova visiva | **[non fatta da me]** Riccardo ha visto vetro, forme, rail e player e ha confermato "così va bene" su più punti; mancano tema chiaro e le verifiche di §1 |
 
 **Tabella file caldi (commit upstream dal 2026-06-01, base 2.24.0)**
@@ -121,6 +122,13 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 
 ## 6. Blocchi e domande aperte
 
+**Scoperte sui workflow (2026-10-23)**
+- I `schedule` girano solo dal branch predefinito: `bomb-sync.yml` sta su `bomb`, quindi `bomb` deve diventare il branch predefinito del fork (`gh repo edit --default-branch bomb`). `main` resta lo specchio di upstream.
+- Il `GITHUB_TOKEN` non può modificare file in `.github/workflows` e i suoi push non fanno partire altri workflow: il sync usa un token personale nel secret `BOMB_PAT` (scope `repo` e `workflow`), così il push di `bomb` fa partire `bomb-build`.
+- Dopo il primo push vanno disattivati nel fork i workflow upstream: `update-packages.yml` parte su `release: published` (le nostre Release lo attiverebbero), `ci.yml` su push e PR verso `main`, `build.yml` solo a mano.
+- Le Release firmate in CI hanno firma diversa dalla build locale di prova (chiave di debug): per installarle serve prima disinstallare Plezy Glass locale (i dati dell'app si perdono; il Plezy ufficiale non è coinvolto).
+- La build di CI non usa `ENABLE_UPDATE_CHECK`, `ENABLE_SENTRY` e `ENABLE_DONATIONS` di upstream: l'app non controlla aggiornamenti dalle Release di edde746 e non invia segnalazioni a Sentry.
+
 **Correzioni di rotta rispetto al prompt**
 - §5.2: `EnableFlutterGPU` va a livello `<application>`, non dentro l'`<activity>`: nell'activity il motore lo ignorava e il vetro usava FakeGlass (barra opaca). Corretto e verificato.
 - §6: oltre a `applicationId` e label vanno sostituite le authority dei provider, altrimenti l'install accanto a Plezy ufficiale fallisce (`INSTALL_FAILED_CONFLICTING_PROVIDER`). Inoltre senza `key.properties` la release esce **non firmata**, contrariamente al commento in `build.gradle.kts`.
@@ -138,12 +146,12 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 
 **Domande aperte per Riccardo**
 - Come vuole le sheet e i menu a comparsa (vetro a tutta sheet o solo header/pulsanti)?
-- Va bene fare il primo push del branch `bomb` sul fork?
-- Vuole generare lui il keystore con i comandi che gli darò?
+- Ok al primo push di `bomb` e `main`, a impostare `bomb` come branch predefinito del fork e a disattivare i workflow upstream?
+- Genera lui il keystore e il token `BOMB_PAT` (comandi forniti in chat)?
 
 ## 7. Stato attuale e prossima azione
 
 **Stato**: barra inferiore e rail orizzontale a capsula; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 16 commit locali su `bomb` rispetto al tag 2.24.0, **nessun push**. Workflow CI, keystore e secrets non fatti.
 **Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
-**Prossima azione**: Riccardo risponde sulle domande aperte; poi E2–E5 (workflow e secrets), E6 (push), le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).
+**Prossima azione**: Riccardo genera keystore e `BOMB_PAT` e dà l'ok al push (E5–E6); poi prima esecuzione dei workflow e correzioni, le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).

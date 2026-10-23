@@ -1,0 +1,91 @@
+name: Bomb sync
+run-name: Bomb sync con upstream
+
+# Ogni giorno: allinea `main` a upstream/main (solo fast-forward) e, se esiste un nuovo
+# tag di release, riapplica le nostre patch con `git rebase --onto`.
+# Mai risolvere conflitti in automatico: se il rebase fallisce si apre una issue.
+#
+# Requisiti:
+# - Questo file deve stare sul branch predefinito del fork (`bomb`): i `schedule`
+#   girano solo da li'.
+# - Secret BOMB_PAT: token personale con scope `repo` e `workflow`. Il GITHUB_TOKEN
+#   non puo' modificare file in .github/workflows e i suoi push non fanno partire
+#   altri workflow (quindi non partirebbe bomb-build).
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: bomb-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.BOMB_PAT }}
+    steps:
+      - name: Require the BOMB_PAT secret
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::Missing secret BOMB_PAT (personal token with repo + workflow scopes)."
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.BOMB_PAT }}
+
+      - name: Configure git and fetch upstream
+        run: |
+          git config user.name "bomb-sync"
+          git config user.email "bomb-sync@users.noreply.github.com"
+          git remote add upstream https://github.com/edde746/plezy.git
+          git fetch upstream --tags --prune --force
+          git fetch origin --tags --force
+
+      - name: Fast-forward main to upstream/main
+        run: |
+          git checkout -B main origin/main
+          git merge --ff-only upstream/main
+          git push origin main
+
+      - name: Rebase bomb onto the latest release tag
+        run: |
+          new_tag=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+          old_tag=$(git tag -l --merged origin/bomb | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+          echo "Base attuale: ${old_tag:-?}  ultimo tag upstream: ${new_tag:-?}"
+          if [ -z "$new_tag" ] || [ -z "$old_tag" ]; then
+            echo "::error::Cannot determine release tags (new='${new_tag}', old='${old_tag}')."
+            exit 1
+          fi
+          if [ "$new_tag" = "$old_tag" ] || [ "$(printf '%s\n%s\n' "$old_tag" "$new_tag" | sort -V | tail -1)" = "$old_tag" ]; then
+            echo "bomb e' gia' basato sull'ultimo tag. Niente da fare."
+            exit 0
+          fi
+
+          git checkout -B bomb origin/bomb
+          if git rebase --onto "$new_tag" "$old_tag" bomb; then
+            git push --force-with-lease=bomb:"$(git rev-parse origin/bomb)" origin bomb
+            echo "Rebase riuscito: $old_tag -> $new_tag"
+            exit 0
+          fi
+
+          conflicts=$(git diff --name-only --diff-filter=U)
+          git rebase --abort
+          title="Rebase di bomb su ${new_tag}: conflitti"
+          body=$(printf 'Il rebase automatico di `bomb` da `%s` a `%s` ha dato conflitti in:\n\n%s\n\nMappa delle patch: `PATCHES.md`. Risolvere a mano in locale (`git rebase --onto %s %s bomb`).' \
+            "$old_tag" "$new_tag" "$(printf '%s\n' "$conflicts" | sed 's/^/- `/; s/$/`/')" "$new_tag" "$old_tag")
+          if gh issue list --state open --search "in:title \"$title\"" --json number --jq 'length' | grep -qv '^0$'; then
+            echo "Issue gia' aperta per $new_tag."
+          else
+            gh issue create --title "$title" --body "$body"
+          fi
+          exit 1
