@@ -67,3 +67,4 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 
 ### Selezione della barra inferiore (2026-10-23)
 `lib/bomb/bomb_glass_nav_bar.dart` (nostro file, nessun upstream in più): l'indicatore di Material (solo attorno all'icona, dimensioni fisse) è spento; una seconda capsula animata sta dietro l'intera voce selezionata (icona + testo). L'indice selezionato e il numero di voci si leggono dal `NavigationBar` sottostante cercandolo nell'albero degli elementi dopo il frame; la posizione assume voci di larghezza uguale (come fa `NavigationBar`) e rispetta RTL.
+- Aggiornamento: margini laterali della barra 16 (prima 24), padding interno 8 e capsula di selezione 4 px più larga della voce: le etichette, che `NavigationLabelScale` adatta alla larghezza della voce, restano dentro la capsula.
