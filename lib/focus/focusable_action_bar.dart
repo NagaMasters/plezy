@@ -7,6 +7,7 @@ import 'focus_theme.dart';
 import 'input_mode_tracker.dart';
 import 'key_event_utils.dart';
 import 'owned_focus_node_binding.dart';
+import '../bomb/bomb_glass_surface.dart'; // BOMB
 
 typedef FocusableActionBuilder = Widget Function(BuildContext context, FocusableActionBuildState state);
 
@@ -347,10 +348,13 @@ class FocusableActionBarState extends State<FocusableActionBar> {
                 decoration: FocusTheme.focusBackgroundDecoration(isFocused: showFocus, borderRadius: 20),
                 child:
                     action.child ??
-                    IconButton(
-                      icon: AppIcon(action.icon, size: action.iconSize, fill: action.iconFill, color: action.iconColor),
-                      tooltip: action.tooltip,
-                      onPressed: action.onPressed,
+                    BombGlassSurface.circle( // BOMB
+                      diameter: 48,
+                      child: IconButton(
+                        icon: AppIcon(action.icon, size: action.iconSize, fill: action.iconFill, color: action.iconColor),
+                        tooltip: action.tooltip,
+                        onPressed: action.onPressed,
+                      ),
                     ),
               ),
         ),
