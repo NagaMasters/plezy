@@ -3,7 +3,7 @@
 Mappa da seguire quando un rebase va in conflitto. Ogni riga toccata è marcata `BOMB:`.
 
 ## `pubspec.yaml`
-- In coda a `dependencies:` (dopo `openwatchparty`): `liquid_glass_renderer: ^1.0.0-dev.1 # BOMB: liquid glass`.
+- In `dependencies:`, subito dopo `flutter_localizations` (riga di `sdk: flutter`): `liquid_glass_renderer: ^1.0.0-dev.1 # BOMB: liquid glass`. Posizione scelta perché stabile: in coda all'elenco upstream la tocca spesso (es. bump di `openwatchparty`) e il rebase andava in conflitto.
 - `pubspec.lock`: solo righe aggiunte dal `pub get` (liquid_glass_renderer 1.0.0-dev.1 e transitive: data_assets, equatable, flutter_gpu, flutter_gpu_shaders, flutter_shaders, motor, ...) più il vincolo SDK `dart: ">=3.13.0 <3.14.0"` imposto dal pacchetto. Nessun altro pacchetto aggiornato. In caso di conflitto: rigenerare con `flutter pub get`.
 
 ## `android/app/src/main/AndroidManifest.xml`
