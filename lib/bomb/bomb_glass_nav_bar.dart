@@ -104,6 +104,8 @@ class _BombGlassNavBarState extends State<BombGlassNavBar> {
       shadowColor: Colors.transparent,
       elevation: 0,
       indicatorColor: Colors.transparent,
+      // Material's default is 4: a little tighter brings the label closer to its icon.
+      labelPadding: const EdgeInsets.only(top: 1),
     );
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     final selected = _selectedIndex;
