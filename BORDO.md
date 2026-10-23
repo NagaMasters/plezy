@@ -154,6 +154,8 @@ Nessuna aperta. Risolte: `applicationId` = `it.bomb.plezyglass` **[D]**; repo cl
 - Le misure sui file caldi e la versione di `liquid_glass_renderer` (`^1.0.0-dev.1`) sono quelle del prompt, potrebbero essere cambiate.
 - `extendBody: true` potrebbe alterare misure di `_navBarKey` o padding liste (da risolvere in `lib/bomb/`, se capita).
 
+**Correzione di rotta (2026-10-23)**: il prompt (§5.2) metteva `EnableFlutterGPU` dentro la `<activity>`; sul telefono il log diceva `Flutter GPU must be enabled via ... metadata` e il vetro usava FakeGlass (da qui la barra "opaca"). Spostato a livello `<application>` (come l'esempio del pacchetto): log `gpuRendererCached=true` = renderer GPU creato. **[V]** tramite log temporaneo (non committato). Resta da vedere a occhio se la rifrazione è visibile.
+
 **Scoperta per la CI (§6)**: oltre a `applicationId` e label, vanno sostituite anche le authority dei provider, altrimenti l'install accanto a Plezy ufficiale fallisce con `INSTALL_FAILED_CONFLICTING_PROVIDER`: `com.edde746.plezy.fileprovider` e `com.edde746.plezy.systemshelf.artwork` in `AndroidManifest.xml`, `ExternalPlayerChannel.kt`, `SystemShelfArtworkProvider.kt`. Inoltre senza `key.properties` la release esce **non firmata** (contrariamente al commento in `build.gradle.kts`): la CI deve generare `key.properties` dai secrets.
 
 **Blocchi**: nessuno bloccante. Aperti da provare sul telefono:

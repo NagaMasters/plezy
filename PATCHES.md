@@ -7,7 +7,7 @@ Mappa da seguire quando un rebase va in conflitto. Ogni riga toccata è marcata 
 - `pubspec.lock`: solo righe aggiunte dal `pub get` (liquid_glass_renderer 1.0.0-dev.1 e transitive: data_assets, equatable, flutter_gpu, flutter_gpu_shaders, flutter_shaders, motor, ...) più il vincolo SDK `dart: ">=3.13.0 <3.14.0"` imposto dal pacchetto. Nessun altro pacchetto aggiornato. In caso di conflitto: rigenerare con `flutter pub get`.
 
 ## `android/app/src/main/AndroidManifest.xml`
-- Nella `<activity android:name=".PlezyActivity">`, subito dopo il meta-data `NormalTheme`: blocco `<!-- BOMB: Flutter GPU per liquid_glass_renderer -->` con meta-data `io.flutter.embedding.android.EnableFlutterGPU` = `true` (4 righe).
+- Dentro `<application>`, subito dopo `<uses-library android:name="android.car" .../>`: blocco `<!-- BOMB: Flutter GPU ... -->` con meta-data `io.flutter.embedding.android.EnableFlutterGPU` = `true` (4 righe). Deve stare a livello application: dentro l'`<activity>` (come diceva il prompt) il motore lo ignora e il vetro ripiega su FakeGlass.
 - Impeller: `FlutterRendererPolicy.kt` lo sceglie per i telefoni (Skia solo per TV vecchie, NVIDIA, Huawei/HONOR, e-waste). Non toccato.
 
 ## `lib/screens/main_screen.dart`
