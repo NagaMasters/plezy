@@ -3,6 +3,8 @@ import '../focus/focus_chrome.dart';
 import '../focus/focus_theme.dart';
 import '../focus/input_mode_tracker.dart';
 import 'clickable_cursor.dart';
+import '../bomb/bomb_glass.dart'; // BOMB
+import '../bomb/bomb_glass_surface.dart'; // BOMB
 
 /// Shared builders for focusable widgets to reduce code duplication.
 ///
@@ -33,6 +35,7 @@ class FocusBuilders {
     required EdgeInsetsGeometry padding,
     required Color backgroundColor,
     double borderRadius = 20,
+    bool bombTinted = false, // BOMB: chip evidenziato = vetro tinto con [backgroundColor]
     required Widget child,
   }) {
     final duration = FocusTheme.getAnimationDuration(context);
@@ -49,12 +52,19 @@ class FocusBuilders {
         child: ClickableCursor(
           child: GestureDetector(
             onTap: onTap,
-            child: AnimatedContainer(
-              duration: duration,
-              curve: Curves.easeOutCubic,
-              padding: padding,
-              decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(borderRadius)),
-              child: child,
+            child: BombGlassSurface.auto( // BOMB
+              borderRadius: borderRadius,
+              tint: bombTinted ? backgroundColor : null,
+              child: AnimatedContainer(
+                duration: duration,
+                curve: Curves.easeOutCubic,
+                padding: padding,
+                decoration: BoxDecoration(
+                  color: kBombGlassEnabled ? Colors.transparent : backgroundColor, // BOMB
+                  borderRadius: BorderRadius.circular(borderRadius),
+                ),
+                child: child,
+              ),
             ),
           ),
         ),

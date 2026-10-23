@@ -47,6 +47,7 @@ class QueueSheet extends StatelessWidget {
             ),
           ),
           FocusableActionBar(
+            bombGlass: false, // BOMB
             actions: [
               FocusableAction(
                 icon: Symbols.shuffle_rounded,

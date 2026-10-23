@@ -362,6 +362,7 @@ class _MiniPlayerCardState extends State<_MiniPlayerCard> with ContextMenuTapMix
                     ),
                     FocusableActionBar(
                       key: _transportKey,
+                      bombGlass: false, // BOMB
                       onNavigateLeft: _detailsFocusNode.requestFocus,
                       actions: [
                         if (widget.desktop)

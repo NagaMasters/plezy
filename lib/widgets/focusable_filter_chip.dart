@@ -89,6 +89,7 @@ class _FocusableFilterChipState extends State<FocusableFilterChip> with Focusabl
       semanticLabel: widget.label,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       backgroundColor: backgroundColor,
+      bombTinted: showFocus, // BOMB
       child: Row(
         mainAxisSize: .min,
         children: [

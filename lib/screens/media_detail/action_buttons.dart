@@ -123,7 +123,7 @@ extension _MediaDetailActionButtons on _MediaDetailScreenState {
     final focusBg = colorScheme.inverseSurface;
     final focusFg = colorScheme.onInverseSurface;
     final tonalBg = colorScheme.secondaryContainer;
-    final idleBg = isTv ? tonalBg.withValues(alpha: 0.38) : tonalBg;
+    final idleBg = kBombGlassEnabled ? Colors.transparent : (isTv ? tonalBg.withValues(alpha: 0.38) : tonalBg); // BOMB: il vetro della riga resta visibile
     final tonalFg = colorScheme.onSecondaryContainer;
     final noOverlay = WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.focused)) return Colors.transparent;
@@ -138,12 +138,18 @@ extension _MediaDetailActionButtons on _MediaDetailScreenState {
     }) {
       if (!isKeyboardMode && !isTv) {
         if (padding != null) {
-          return FilledButton.styleFrom(padding: padding, shape: shape);
+          return FilledButton.styleFrom(
+            padding: padding,
+            shape: shape,
+            backgroundColor: kBombGlassEnabled ? Colors.transparent : null, // BOMB
+            foregroundColor: kBombGlassEnabled ? colorScheme.onSurface : null, // BOMB
+          );
         }
         return IconButton.styleFrom(
           minimumSize: const Size(48, 48),
           maximumSize: const Size(48, 48),
           foregroundColor: foregroundColor,
+          backgroundColor: kBombGlassEnabled ? Colors.transparent : null, // BOMB
         );
       }
 
