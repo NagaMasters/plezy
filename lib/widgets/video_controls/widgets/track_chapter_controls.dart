@@ -373,6 +373,7 @@ class TrackChapterControls extends StatelessWidget {
         return IntrinsicHeight(
           child: BombGlassSurface( // BOMB: un unico modulo di vetro per i controlli tracce/capitoli
             borderRadius: 20,
+            clear: true,
             child: Row(mainAxisSize: .min, crossAxisAlignment: .stretch, children: buttons),
           ),
         );
