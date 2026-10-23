@@ -297,7 +297,11 @@ class FocusableActionBarState extends State<FocusableActionBar> {
     // switch on the tiled GPUs low-end TVs use, and these bars sit on screen
     // permanently. Per-button dims (below) take over only while the row holds
     // focus; mid-transition the two multiply, which stays visually seamless.
-    return AnimatedOpacity(opacity: isKeyboard && !_hasAnyFocus ? 0.6 : 1.0, duration: duration, child: row);
+    return AnimatedOpacity(
+      opacity: isKeyboard && !_hasAnyFocus ? 0.6 : 1.0,
+      duration: duration,
+      child: BombGlassSurface(borderRadius: 24, child: row), // BOMB: un solo modulo di vetro per tutta la riga
+    );
   }
 
   double _gapBefore(int index) => widget.actions[index].spacingBefore ?? widget.spacing;
@@ -348,13 +352,10 @@ class FocusableActionBarState extends State<FocusableActionBar> {
                 decoration: FocusTheme.focusBackgroundDecoration(isFocused: showFocus, borderRadius: 20),
                 child:
                     action.child ??
-                    BombGlassSurface.circle( // BOMB
-                      diameter: 48,
-                      child: IconButton(
-                        icon: AppIcon(action.icon, size: action.iconSize, fill: action.iconFill, color: action.iconColor),
-                        tooltip: action.tooltip,
-                        onPressed: action.onPressed,
-                      ),
+                    IconButton(
+                      icon: AppIcon(action.icon, size: action.iconSize, fill: action.iconFill, color: action.iconColor),
+                      tooltip: action.tooltip,
+                      onPressed: action.onPressed,
                     ),
               ),
         ),
