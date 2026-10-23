@@ -16,7 +16,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 - [x] `git diff 2.24.0..bomb --stat`: solo `lib/bomb/*`, i file elencati in `PATCHES.md`, `pubspec.*`, `AndroidManifest.xml`, `.github/workflows/bomb-*.yml`, `PATCHES.md`, `BORDO.md`. Qualsiasi altro file = errore
 - [x] `flutter analyze` senza nuovi problemi rispetto al tag di partenza (49 sul tag 2.24.0 pulito, 49 sul nostro branch, tutti in `packages/*/test`)
 - [x] `flutter build apk --release` ok con `BOMB_GLASS=true` **e** `false` (entrambe rifatte dopo le estensioni: arm64 178,6 MB e 178,2 MB)
-- [x] rebase a secco su `upstream/main` (21 commit avanti al tag): 1 solo conflitto, banale, in `pubspec.yaml` (upstream ha alzato `openwatchparty` sulla riga sopra la nostra); gli altri 25 commit puliti; dopo la risoluzione `pub get --enforce-lockfile` ok e `flutter analyze` pulito sui 23 file toccati
+- [x] rebase a secco su `upstream/main` (21 commit avanti al tag): prima del riposizionamento della riga di `pubspec.yaml` 1 conflitto banale (bump di `openwatchparty` sulla riga sopra); dopo, 0 conflitti. Risolto il conflitto, `pub get --enforce-lockfile` ok e `flutter analyze` pulito sui 23 file toccati
 - [~] checklist sul telefono eseguita da Riccardo: vetro, tema chiaro, banda offline, mini-player e fluidità nel player confermati; installazione accanto a Plezy ufficiale confermata; da guardare: aggiornamento di una Release sopra la precedente
 - [x] workflow `bomb-build` e `bomb-sync` funzionanti, secrets caricati (sync provato solo nel caso "già aggiornato")
 
@@ -79,6 +79,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 | 2026-10-23 | `Bomb build` completo (run 40030660849) | **[V]** tutti i passi riusciti: pub get, analyze, APK per 3 architetture, Release `bomb-2.24.0-2` (arm64 101 MB, armeabi-v7a 97 MB, x86_64 110 MB). APK arm64 scaricato e controllato: firmato con `CN=Plezy Glass` (SHA-256 `02555cfe…a9dd2`), `package: it.bomb.plezyglass`, label `Plezy Glass`, versionName 2.24.0 |
 | 2026-10-23 | `Bomb sync` (run 40032174220) | **[V]** riuscito: `BOMB_PAT` presente, fast-forward di `main`, base di `bomb` = ultimo tag = 2.24.0, nessuna azione. **[non provato]** rebase su un tag nuovo |
 | 2026-10-24 | Verifiche finali G1 | **[V]** build `false` ok; analyze 49 = 49 col tag; rebase a secco: 1 conflitto banale in `pubspec.yaml`, il resto pulito, compila; diff vs tag: solo `lib/bomb/*` e i file elencati in `PATCHES.md`. Prove sul telefono di Riccardo: tema chiaro, banda offline, mini-player e fluidità del player ok |
+| 2026-10-24 | Riga di `pubspec.yaml` spostata sotto `flutter_localizations` e fusa nel primo commit della dipendenza (storia di `bomb` riscritta, push forzato `--force-with-lease`; backup in `bomb-backup-prima-push-forzato`, locale e sul fork) | **[V]** contenuto identico al backup tranne quella riga; rebase a secco su `upstream/main` (21 commit avanti al tag): 0 conflitti su 27 commit. La Release `bomb-2.24.0-2` punta a un commit non più sul branch (resta scaricabile) |
 | 2026-10-23 | Prova visiva | **[non fatta da me]** Riccardo ha visto vetro, forme, rail e player e ha confermato "così va bene" su più punti; mancano tema chiaro e le verifiche di §1 |
 
 **Tabella file caldi (commit upstream dal 2026-06-01, base 2.24.0)**
