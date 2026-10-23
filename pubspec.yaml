@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  liquid_glass_renderer: ^1.0.0-dev.1 # BOMB: liquid glass
   clock: ^1.1.2
   intl: ^0.20.2
   json_annotation: ^4.12.0
