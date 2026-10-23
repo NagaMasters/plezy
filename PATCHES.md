@@ -61,3 +61,6 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 ## File nostri in `.github/workflows/` (nessun conflitto con upstream)
 - `bomb-build.yml`: push su `bomb` / dispatch. Legge `FLUTTER_VERSION` dal `build.yml` upstream; sostituisce a build time `applicationId`, label e le due authority dei provider (fallisce se una stringa non c'è più); crea `android/key.properties` dai secrets `BOMB_KEYSTORE_BASE64`, `BOMB_KEYSTORE_PASSWORD`, `BOMB_KEY_ALIAS`, `BOMB_KEY_PASSWORD` (fallisce se mancano); `flutter analyze lib/bomb`; APK `--split-per-abi` con `BOMB_GLASS=true`; Release `bomb-<versione>-<n>`.
 - `bomb-sync.yml`: ogni giorno, fast-forward di `main` su `upstream/main` e rebase di `bomb` sul nuovo tag; in caso di conflitto annulla e apre una issue. Richiede il secret `BOMB_PAT` e `bomb` come branch predefinito.
+
+### Comandi sopra il video (2026-10-23, terza passata)
+`BombGlassSurface(clear: true)` non usa più il renderer: il vetro vero campiona lo sfondo e dietro i comandi (video in `SurfaceView` nativi sotto Flutter) c'è solo trasparenza, quindi risultava opaco. Ora disegna `_OverVideoGlass` in `lib/bomb/bomb_glass_surface.dart`: gradiente bianco 20%→5%, bordo bianco 30%, clip alla forma; il video si vede attraverso. Nessun file upstream in più.

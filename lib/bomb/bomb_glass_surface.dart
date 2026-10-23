@@ -3,8 +3,8 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import 'bomb_glass.dart';
 
-LiquidGlassSettings _settings(BuildContext context, {bool clear = false}) =>
-    clear ? LiquidGlassSettings.ios27Clear() : LiquidGlassSettings.ios27Regular(brightness: Theme.of(context).brightness);
+LiquidGlassSettings _settings(BuildContext context) =>
+    LiquidGlassSettings.ios27Regular(brightness: Theme.of(context).brightness);
 
 // Ombra di esempio del README del pacchetto: fa leggere il vetro anche su sfondi piatti.
 const _shadows = [BoxShadow(color: Color(0x24000000), offset: Offset(0, 6), blurRadius: 20)];
@@ -36,8 +36,10 @@ class BombGlassSurface extends StatelessWidget {
   final double borderRadius;
   final Color? tint;
 
-  /// Clear glass (almost no wash): for controls over the video, where the glass
-  /// cannot sample the picture (it lives in a native surface below Flutter's).
+  /// For controls over the video: the picture lives in a native surface below
+  /// Flutter's, so real glass would sample only transparency and paint an opaque
+  /// body. This draws a see-through "glass" instead (faint veil, lit rim) that
+  /// does not read the backdrop.
   final bool clear;
   final bool _auto;
   final Widget child;
@@ -45,6 +47,7 @@ class BombGlassSurface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!kBombGlassEnabled) return child;
+    if (clear) return _OverVideoGlass(borderRadius: borderRadius, child: child);
     final shape = LiquidRoundedSuperellipse(borderRadius: borderRadius);
     if (_auto) {
       return LiquidGlass.auto(
@@ -57,13 +60,7 @@ class BombGlassSurface extends StatelessWidget {
         child: child,
       );
     }
-    return LiquidGlass.withOwnLayer(
-      settings: _settings(context, clear: clear),
-      shape: shape,
-      shadows: _shadows,
-      appearance: clear ? const LiquidGlassAppearance.ios27Clear() : null,
-      child: child,
-    );
+    return LiquidGlass.withOwnLayer(settings: _settings(context), shape: shape, shadows: _shadows, child: child);
   }
 }
 
@@ -78,5 +75,31 @@ class BombGlassLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!kBombGlassEnabled) return child;
     return LiquidGlassLayer(settings: _settings(context), child: child);
+  }
+}
+
+/// See-through glass look for controls over the video. Does not sample the
+/// backdrop, so the video shows through. The alphas below are our own choice.
+class _OverVideoGlass extends StatelessWidget {
+  const _OverVideoGlass({required this.borderRadius, required this.child});
+
+  final double borderRadius;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(borderRadius);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: radius,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0x33FFFFFF), Color(0x0DFFFFFF)],
+        ),
+        border: Border.all(color: const Color(0x4DFFFFFF), width: 1),
+      ),
+      child: ClipRRect(borderRadius: radius, child: child),
+    );
   }
 }
