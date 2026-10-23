@@ -26,6 +26,7 @@ class CircularControlButton extends StatelessWidget {
     final isEnabled = onPressed != null;
     return BombGlassSurface( // BOMB
       borderRadius: 100,
+      clear: true,
       child: Container(
       decoration: kBombGlassEnabled ? null : BoxDecoration(color: Colors.black.withValues(alpha: 0.5), shape: BoxShape.circle), // BOMB
       child: Semantics(

@@ -3,8 +3,8 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import 'bomb_glass.dart';
 
-LiquidGlassSettings _settings(BuildContext context) =>
-    LiquidGlassSettings.ios27Regular(brightness: Theme.of(context).brightness);
+LiquidGlassSettings _settings(BuildContext context, {bool clear = false}) =>
+    clear ? LiquidGlassSettings.ios27Clear() : LiquidGlassSettings.ios27Regular(brightness: Theme.of(context).brightness);
 
 // Ombra di esempio del README del pacchetto: fa leggere il vetro anche su sfondi piatti.
 const _shadows = [BoxShadow(color: Color(0x24000000), offset: Offset(0, 6), blurRadius: 20)];
@@ -17,20 +17,28 @@ const _shadows = [BoxShadow(color: Color(0x24000000), offset: Offset(0, 6), blur
 /// the surface joins the nearest [BombGlassLayer] above it and only creates its
 /// own when there is none.
 class BombGlassSurface extends StatelessWidget {
-  const BombGlassSurface({super.key, required this.borderRadius, required this.child}) : _auto = false, tint = null;
+  const BombGlassSurface({super.key, required this.borderRadius, this.clear = false, required this.child})
+    : _auto = false,
+      tint = null;
 
   /// Circle of the given [diameter]; the child should be laid out at that size.
-  const BombGlassSurface.circle({super.key, required double diameter, required this.child})
+  const BombGlassSurface.circle({super.key, required double diameter, this.clear = false, required this.child})
     : borderRadius = diameter / 2,
       _auto = false,
       tint = null;
 
   /// Shares the layer of an enclosing [BombGlassLayer]. A non-null [tint]
   /// colors the glass (its alpha sets how strongly).
-  const BombGlassSurface.auto({super.key, required this.borderRadius, this.tint, required this.child}) : _auto = true;
+  const BombGlassSurface.auto({super.key, required this.borderRadius, this.tint, required this.child})
+    : _auto = true,
+      clear = false;
 
   final double borderRadius;
   final Color? tint;
+
+  /// Clear glass (almost no wash): for controls over the video, where the glass
+  /// cannot sample the picture (it lives in a native surface below Flutter's).
+  final bool clear;
   final bool _auto;
   final Widget child;
 
@@ -49,7 +57,13 @@ class BombGlassSurface extends StatelessWidget {
         child: child,
       );
     }
-    return LiquidGlass.withOwnLayer(settings: _settings(context), shape: shape, shadows: _shadows, child: child);
+    return LiquidGlass.withOwnLayer(
+      settings: _settings(context, clear: clear),
+      shape: shape,
+      shadows: _shadows,
+      appearance: clear ? const LiquidGlassAppearance.ios27Clear() : null,
+      child: child,
+    );
   }
 }
 
