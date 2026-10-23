@@ -24,12 +24,12 @@ class BombGlassNavBar extends StatefulWidget {
 class _BombGlassNavBarState extends State<BombGlassNavBar> {
   static const double _horizontalMargin = 16;
   static const double _bottomMargin = 12;
-  static const double _barHeight = 64;
+  static const double _barHeight = 68;
   // Room between the bar's edge and the first/last destination, and how far the
   // selection capsule extends past its destination so a label never touches its edge.
   static const double _innerPadding = 8;
   static const double _selectionOvershoot = 4;
-  static const double _selectionVerticalInset = 6;
+  static const double _selectionVerticalInset = 3;
 
   final _childKey = GlobalKey();
   double _radius = _barHeight / 2;
