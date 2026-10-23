@@ -17,6 +17,7 @@ import '../sheets/track_sheet.dart';
 import '../sheets/video_settings_sheet.dart';
 import '../../../utils/track_label_builder.dart';
 import '../video_control_button.dart';
+import '../../../bomb/bomb_glass_surface.dart'; // BOMB
 
 /// Row of track and chapter control buttons for the video player
 class TrackChapterControls extends StatelessWidget {
@@ -370,7 +371,10 @@ class TrackChapterControls extends StatelessWidget {
         }
 
         return IntrinsicHeight(
-          child: Row(mainAxisSize: .min, crossAxisAlignment: .stretch, children: buttons),
+          child: BombGlassSurface( // BOMB: un unico modulo di vetro per i controlli tracce/capitoli
+            borderRadius: 20,
+            child: Row(mainAxisSize: .min, crossAxisAlignment: .stretch, children: buttons),
+          ),
         );
       },
     );

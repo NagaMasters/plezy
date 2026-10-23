@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plezy/widgets/app_icon.dart';
+import '../../../bomb/bomb_glass.dart'; // BOMB
+import '../../../bomb/bomb_glass_surface.dart'; // BOMB
 
 /// A circular semi-transparent button used in the mobile video controls.
 ///
@@ -22,8 +24,10 @@ class CircularControlButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isEnabled = onPressed != null;
-    return Container(
-      decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), shape: BoxShape.circle),
+    return BombGlassSurface( // BOMB
+      borderRadius: 100,
+      child: Container(
+      decoration: kBombGlassEnabled ? null : BoxDecoration(color: Colors.black.withValues(alpha: 0.5), shape: BoxShape.circle), // BOMB
       child: Semantics(
         label: semanticLabel,
         button: true,
@@ -41,6 +45,7 @@ class CircularControlButton extends StatelessWidget {
           onPressed: onPressed,
         ),
       ),
+      ), // BOMB
     );
   }
 }
