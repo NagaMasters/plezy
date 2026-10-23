@@ -23,6 +23,7 @@ import '../utils/content_utils.dart';
 import '../widgets/cycling_media_backdrop.dart';
 import '../widgets/hero_carousel_backdrop.dart';
 import '../widgets/optimized_media_image.dart' show ClearLogoImage, blurArtwork;
+import '../bomb/bomb_hero_art.dart'; // BOMB
 import '../widgets/toolbar_scrim.dart';
 import '../widgets/system_clock.dart';
 import '../providers/discover_provider.dart';
@@ -1376,7 +1377,11 @@ class _DiscoverScreenState extends State<DiscoverScreen>
   Widget _buildHeroArtwork(MediaItem heroItem, double heroHeight, {required Size artSize, required bool active}) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final heroAspectRatio = screenWidth / heroHeight;
-    final heroArtPaths = heroItem.heroArtCandidates(containerAspectRatio: heroAspectRatio);
+    final heroArtPaths = bombHeroArtCandidates(
+      heroItem,
+      heroAspectRatio,
+      heroItem.heroArtCandidates(containerAspectRatio: heroAspectRatio),
+    ); // BOMB: copertina della stagione
     final fallbackColor = Theme.of(context).colorScheme.surfaceContainerHighest;
     if (heroArtPaths.isEmpty) return ColoredBox(color: fallbackColor);
     // heroClient resolves to the actual server's client (Plex or Jellyfin) so
@@ -1385,7 +1390,11 @@ class _DiscoverScreenState extends State<DiscoverScreen>
     return blurArtwork(
       CyclingMediaBackdrop(
         mediaKey: heroItem.globalKey,
-        imagePaths: heroItem.heroRotationPaths(containerAspectRatio: heroAspectRatio),
+        imagePaths: bombHeroRotationPaths(
+          heroItem,
+          heroAspectRatio,
+          heroItem.heroRotationPaths(containerAspectRatio: heroAspectRatio),
+        ), // BOMB
         fallbackImagePaths: heroArtPaths,
         client: _getMediaClientForItem(heroItem),
         active: active && _isTabVisible,
