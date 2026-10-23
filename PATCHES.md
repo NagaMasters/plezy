@@ -64,3 +64,6 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 
 ### Comandi sopra il video (2026-10-23, terza passata)
 `BombGlassSurface(clear: true)` non usa più il renderer: il vetro vero campiona lo sfondo e dietro i comandi (video in `SurfaceView` nativi sotto Flutter) c'è solo trasparenza, quindi risultava opaco. Ora disegna `_OverVideoGlass` in `lib/bomb/bomb_glass_surface.dart`: gradiente bianco 20%→5%, bordo bianco 30%, clip alla forma; il video si vede attraverso. Nessun file upstream in più.
+
+### Selezione della barra inferiore (2026-10-23)
+`lib/bomb/bomb_glass_nav_bar.dart` (nostro file, nessun upstream in più): l'indicatore di Material (solo attorno all'icona, dimensioni fisse) è spento; una seconda capsula animata sta dietro l'intera voce selezionata (icona + testo). L'indice selezionato e il numero di voci si leggono dal `NavigationBar` sottostante cercandolo nell'albero degli elementi dopo il frame; la posizione assume voci di larghezza uguale (come fa `NavigationBar`) e rispetta RTL.

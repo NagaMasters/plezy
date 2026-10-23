@@ -112,6 +112,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 | 9 | Perimetro esteso a schermate e player; prima app bar e ricerca, poi chip e sheet | [D] | Richiesta di Riccardo; supera le regole §0.6 e §5.4 del prompt |
 | 10 | Flutter 3.47.1 via `git clone` invece di FVM | [I] | `choco` richiede admin; stessa versione |
 | 11 | Barra inferiore: capsula alta 64, margini 24 laterali e 12 sotto, indicatore `onSurface` 12%, raggio = metà dell'altezza misurata | [I] | Valori miei; Riccardo ha chiesto una forma più precisa e proporzionata |
+| 19 | Selezione della barra = capsula dietro icona e testo insieme (non solo l'icona) | [D] | Scelta di Riccardo tra "togliere il testo" e "inglobarlo nella selezione"; l'indicatore di Material è spento |
 | 12 | Banda Reconnect dentro il vetro | [I] | Aggancio minimo; leggibilità da provare offline |
 | 13 | Colore del vetro dal tema dell'app (`Theme.brightness`) | [I] | Segue il tema scelto nell'app |
 | 14 | Un layer per controllo (`BombGlassSurface`); la riga azioni è un solo modulo; chip della striscia in un layer condiviso | [I] | Semplicità; se cala la fluidità, raggruppare |
