@@ -5,6 +5,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../focus/focusable_wrapper.dart';
 import '../i18n/strings.g.dart';
 import 'app_icon.dart';
+import '../bomb/bomb_glass.dart'; // BOMB
+import '../bomb/bomb_glass_surface.dart'; // BOMB
 
 /// Defines the visual style of the back button
 enum BackButtonStyle {
@@ -94,8 +96,8 @@ class _AppBarBackButtonState extends State<AppBarBackButton> {
     final (Color icon, Color base, Color hover) = switch (widget.style) {
       BackButtonStyle.circular => (
         widget.color ?? Colors.white,
-        Colors.black.withValues(alpha: 0.3),
-        Colors.black.withValues(alpha: 0.5),
+        kBombGlassEnabled ? Colors.transparent : Colors.black.withValues(alpha: 0.3), // BOMB
+        kBombGlassEnabled ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.5), // BOMB
       ),
       BackButtonStyle.plain => (widget.color ?? onTheme, Colors.transparent, onTheme.withValues(alpha: 0.2)),
       BackButtonStyle.video => (widget.color ?? Colors.white, Colors.transparent, Colors.black.withValues(alpha: 0.3)),
@@ -127,7 +129,12 @@ class _AppBarBackButtonState extends State<AppBarBackButton> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(color: _hovered ? hover : base, shape: BoxShape.circle),
-              child: AppIcon(Symbols.arrow_back_rounded, fill: 1, color: icon, size: 20),
+              child: widget.style == BackButtonStyle.video // BOMB
+                  ? AppIcon(Symbols.arrow_back_rounded, fill: 1, color: icon, size: 20)
+                  : BombGlassSurface.circle(
+                      diameter: 40,
+                      child: AppIcon(Symbols.arrow_back_rounded, fill: 1, color: icon, size: 20),
+                    ),
             ),
           ),
         ),

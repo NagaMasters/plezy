@@ -126,6 +126,8 @@ Ordine da §10. Ogni voce ha il suo criterio di verifica.
 | Install su telefono (SM-S931B) | **[V]** APK locale `it.bomb.plezyglass` firmato con la debug key; `adb install` → Success; Plezy ufficiale (`com.edde746.plezy`) ancora installato. Avvio con `monkey`: `MainActivity` in primo piano, pid presente, nessun FATAL nel logcat. Build locale con 4 file modificati solo temporaneamente e poi ripristinati (repo pulito) |
 | Prova visiva del vetro | **[non fatta]** tocca a Riccardo (checklist §9.6) |
 
+**Estensione del perimetro (2026-10-23, richiesta di Riccardo)**: vetro su tutti i controlli flottanti (app bar, ricerca, chip, player, altre schermate). Prima iterazione fatta: back button (circular/plain), pulsanti `FocusableActionBar`, `SearchInputField`. Compilato e installato sul telefono; prova visiva da fare.
+
 ## 5. Decisioni e motivazioni
 
 | # | Decisione | Tipo | Motivazione |
@@ -138,6 +140,8 @@ Ordine da §10. Ogni voce ha il suo criterio di verifica.
 | 6 | ID/nome app cambiati in CI, non nel repo | [D] | `build.gradle.kts` cambia spesso (27 commit) |
 | 7 | Niente precache in `main.dart` | [D] | File caldissimo (86 commit) |
 | 8 | `BORDO.md` spostato nella radice del repo `plezy` (non ancora committato) | [D] | Posizione del repo confermata da Riccardo |
+| 14 | Perimetro esteso: anche schermate e player, a partire da pulsanti app bar e ricerca; poi chip e sheet | [D] | Risposta di Riccardo; **supera** le regole §0.6 e §5.4 del prompt (player e file caldi vietati). Rischio accettato: più conflitti di rebase, vedi PATCHES.md |
+| 15 | Un `BombGlassSurface` con layer proprio per controllo | [I] | Più semplice; costo prestazionale da valutare (ogni layer copia lo sfondo). Se la fluidità cala, raggruppare in layer condivisi |
 | 11 | Pillola flottante: margine 16 laterale, 8 sotto + inset di sistema fuori dal vetro; `removePadding(bottom)` dentro | [I] | Il prompt chiede la pillola staccata dai bordi che rispetta `paddingOf.bottom`; i valori 16/8/28 sono miei, non indicati dal prompt |
 | 12 | Banda Reconnect dentro il vetro (il wrapper avvolge tutta la `Column`) | [I] | Aggancio minimo; leggibilità da provare sul telefono |
 | 13 | Colore vetro da `Theme.of(context).brightness` | [I] | Segue il tema dell'app, non quello di sistema |

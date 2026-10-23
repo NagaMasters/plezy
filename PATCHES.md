@@ -17,3 +17,19 @@ Funzione `_buildPortraitShell`:
 3. `bottomNavigationBar: Column(` diventa `bottomNavigationBar: BombGlassNavBar( // BOMB` + riga `child: Column(`.
 4. Chiusura: riga `), // BOMB` dopo la `),` della `Column`.
 Il layout landscape, `_buildBottomNavigationBar` e `_navBarKey` non sono toccati.
+
+## Estensione del vetro ai controlli flottanti (decisione di Riccardo, 2026-10-23)
+Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/bomb_glass_surface.dart` (`BombGlassSurface`, un layer per controllo).
+
+### `lib/widgets/app_bar_back_button.dart`
+- 2 import in coda.
+- Stile `circular`: colori base/hover resi trasparenti / bianco 12% quando il vetro è attivo.
+- Il figlio del `AnimatedContainer` è avvolto in `BombGlassSurface.circle(diameter: 40)` per gli stili `circular` e `plain`; lo stile `video` è invariato.
+
+### `lib/focus/focusable_action_bar.dart`
+- 1 import in coda.
+- L'`IconButton` predefinito delle azioni è avvolto in `BombGlassSurface.circle(diameter: 48)`; le azioni con `child` o `builder` custom restano invariate.
+
+### `lib/widgets/search_input_field.dart`
+- 2 import in coda.
+- `Stack` avvolto in `BombGlassSurface(borderRadius: 24)`; `fillColor` della decorazione trasparente quando il vetro è attivo (tocca solo questo campo, non `pillInputDecoration`).
