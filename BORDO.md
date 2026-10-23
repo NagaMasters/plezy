@@ -2,7 +2,7 @@
 
 Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
 Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
-Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
+Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 
 ---
 
@@ -41,7 +41,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 - [x] Riga azioni della schermata film/serie con pulsanti traslucidi (`media_detail/action_buttons.dart`)
 - [x] Back del telecomando (`mobile_remote_screen.dart`)
 - [x] Player mobile: pulsanti circolari, back, gruppo tracce/capitoli, in vetro `clear`
-- [x] Barra inferiore ridisegnata a capsula (altezza 64, raggio misurato, indicatore a capsula)
+- [x] Barra inferiore ridisegnata a capsula (altezza 68, margini 16 laterali, raggio misurato, selezione = capsula dietro icona e testo, etichetta a 1 px dall'icona)
 - [x] Rail orizzontale a capsula verticale (`mobile_navigation_rail.dart`, `BombGlassRail`)
 - [x] Titoli del player cliccabili: serie → pagina della serie; riga episodio → pagina dell'episodio (`video_controls_header.dart`)
 - [x] Copertina di stagione nella hero della home, solo in portrait (`discover_screen.dart`)
@@ -111,7 +111,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 | 8 | Repo in `C:\Users\alema\Desktop\AndroidStudio\plezy` | [D] | Scelta di Riccardo |
 | 9 | Perimetro esteso a schermate e player; prima app bar e ricerca, poi chip e sheet | [D] | Richiesta di Riccardo; supera le regole §0.6 e §5.4 del prompt |
 | 10 | Flutter 3.47.1 via `git clone` invece di FVM | [I] | `choco` richiede admin; stessa versione |
-| 11 | Barra inferiore: capsula alta 64, margini 24 laterali e 12 sotto, indicatore `onSurface` 12%, raggio = metà dell'altezza misurata | [I] | Valori miei; Riccardo ha chiesto una forma più precisa e proporzionata |
+| 11 | Barra inferiore: capsula alta 68, margini 16 laterali e 12 sotto, selezione `onSurface` 12% con 3 px di margine verticale e 4 px di sbordo laterale, etichetta a 1 px dall'icona, raggio = metà dell'altezza misurata | [I] | Valori miei; Riccardo ha chiesto una forma più precisa e proporzionata |
 | 19 | Selezione della barra = capsula dietro icona e testo insieme (non solo l'icona) | [D] | Scelta di Riccardo tra "togliere il testo" e "inglobarlo nella selezione"; l'indicatore di Material è spento |
 | 12 | Banda Reconnect dentro il vetro | [I] | Aggancio minimo; leggibilità da provare offline |
 | 13 | Colore del vetro dal tema dell'app (`Theme.brightness`) | [I] | Segue il tema scelto nell'app |
@@ -152,7 +152,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `a3c10429d`.
 
 ## 7. Stato attuale e prossima azione
 
-**Stato**: barra inferiore e rail orizzontale a capsula; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 16 commit locali su `bomb` rispetto al tag 2.24.0, **nessun push**. Workflow CI, keystore e secrets non fatti.
+**Stato**: barra inferiore (selezione che include icona e testo) e rail orizzontale a capsula; comandi del player in vetro trasparente non campionato; workflow `bomb-build` e `bomb-sync` scritti ma non eseguiti; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 16 commit locali su `bomb` rispetto al tag 2.24.0, **nessun push**. Workflow CI, keystore e secrets non fatti.
 **Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
 **Prossima azione**: Riccardo genera keystore e `BOMB_PAT` e dà l'ok al push (E5–E6); poi prima esecuzione dei workflow e correzioni, le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).
