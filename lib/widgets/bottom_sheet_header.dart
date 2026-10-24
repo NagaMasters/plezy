@@ -4,6 +4,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../i18n/strings.g.dart';
 
 import 'overlay_sheet.dart';
+import '../bomb/bomb_glass_surface.dart'; // BOMB
+import '../bomb/bomb_sheet_header.dart'; // BOMB
 
 /// A reusable header widget for bottom sheets
 /// Provides consistent styling with title, optional leading widget, optional action, and close button
@@ -72,11 +74,11 @@ class BottomSheetHeader extends StatelessWidget {
       resolvedLeading = leading;
     } else if (onBack != null) {
       resolvedLeading = SizedBox(
-        width: 24,
+        width: bombBackGlyphWidth(24), // BOMB
         height: kMinInteractiveDimension,
         child: Align(
           alignment: Alignment.centerLeft,
-          child: ExcludeSemantics(child: AppIcon(Symbols.arrow_back_rounded, fill: 1, color: iconColor)),
+          child: ExcludeSemantics(child: bombBackGlyph(AppIcon(Symbols.arrow_back_rounded, fill: 1, color: iconColor))), // BOMB
         ),
       );
     } else if (icon != null) {
@@ -102,12 +104,14 @@ class BottomSheetHeader extends StatelessWidget {
                 Expanded(child: Text(title, style: effectiveTitleStyle)),
                 ?action,
                 ExcludeFocusTraversal(
-                  child: IconButton(
+                  child: BombGlassSurface.circle( // BOMB
+                    diameter: 48,
+                    child: IconButton(
                     focusNode: closeFocusNode,
                     tooltip: t.common.close,
                     icon: AppIcon(Symbols.close_rounded, fill: 1, color: iconColor),
                     onPressed: onClose ?? () => OverlaySheetController.closeAdaptive(context),
-                  ),
+                  )),
                 ),
               ],
             ),
@@ -117,7 +121,7 @@ class BottomSheetHeader extends StatelessWidget {
               // Center the hit target (and thus the circular hover/press
               // highlight of the InkResponse) on the 24px arrow glyph, which
               // sits at the row's leading edge inside the 16px padding.
-              start: 16 + 12 - kMinInteractiveDimension / 2,
+              start: 16 + bombBackGlyphWidth(24) / 2 - kMinInteractiveDimension / 2, // BOMB
               top: 0,
               bottom: 0,
               width: kMinInteractiveDimension,

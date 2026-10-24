@@ -45,8 +45,8 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 - [x] Rail orizzontale a capsula verticale (`mobile_navigation_rail.dart`, `BombGlassRail`)
 - [x] Titoli del player cliccabili: serie → pagina della serie; riga episodio → pagina dell'episodio (`video_controls_header.dart`)
 - [x] Copertina di stagione nella hero della home, solo in portrait (`discover_screen.dart`)
-- [ ] Sheet e menu a comparsa (`overlay_sheet.dart`): da decidere come con Riccardo
-- [ ] Barra del tempo del player, back della `BottomSheetHeader`, player desktop (`desktop_video_controls.dart`)
+- [x] Sheet: vetro su intestazione e pulsanti (chiusura, indietro) in `bottom_sheet_header.dart`, corpo opaco (scelta lasciata a me da Riccardo: "mi fido di te, procedi"); menu a comparsa non toccati
+- [ ] Barra del tempo del player, player desktop (`desktop_video_controls.dart`)
 - [ ] Pulsanti senza vetro in altre schermate, se segnalati
 
 **E. Identità e workflow (§6–7)**
