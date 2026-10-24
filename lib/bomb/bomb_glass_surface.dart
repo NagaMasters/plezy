@@ -3,8 +3,8 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import 'bomb_glass.dart';
 
-LiquidGlassSettings _settings(BuildContext context) =>
-    LiquidGlassSettings.ios27Regular(brightness: Theme.of(context).brightness);
+LiquidGlassSettings _settings(BuildContext context, {double tintAmount = 0}) =>
+    LiquidGlassSettings.ios27Regular(brightness: Theme.of(context).brightness, tintAmount: tintAmount);
 
 // Ombra di esempio del README del pacchetto: fa leggere il vetro anche su sfondi piatti.
 const _shadows = [BoxShadow(color: Color(0x24000000), offset: Offset(0, 6), blurRadius: 20)];
@@ -17,13 +17,19 @@ const _shadows = [BoxShadow(color: Color(0x24000000), offset: Offset(0, 6), blur
 /// the surface joins the nearest [BombGlassLayer] above it and only creates its
 /// own when there is none.
 class BombGlassSurface extends StatelessWidget {
-  const BombGlassSurface({super.key, required this.borderRadius, this.clear = false, required this.child})
-    : _auto = false,
-      tint = null;
+  const BombGlassSurface({
+    super.key,
+    required this.borderRadius,
+    this.clear = false,
+    this.tintAmount = 0,
+    required this.child,
+  }) : _auto = false,
+       tint = null;
 
   /// Circle of the given [diameter]; the child should be laid out at that size.
   const BombGlassSurface.circle({super.key, required double diameter, this.clear = false, required this.child})
     : borderRadius = diameter / 2,
+      tintAmount = 0,
       _auto = false,
       tint = null;
 
@@ -31,10 +37,15 @@ class BombGlassSurface extends StatelessWidget {
   /// colors the glass (its alpha sets how strongly).
   const BombGlassSurface.auto({super.key, required this.borderRadius, this.tint, required this.child})
     : _auto = true,
+      tintAmount = 0,
       clear = false;
 
   final double borderRadius;
   final Color? tint;
+
+  /// Position of iOS 27's Liquid Glass slider, 0 (clear) to 1 (tinted): more wash and a
+  /// stronger blur. Only for the surface that owns its layer.
+  final double tintAmount;
 
   /// For controls over the video: the picture lives in a native surface below
   /// Flutter's, so real glass would sample only transparency and paint an opaque
@@ -60,7 +71,12 @@ class BombGlassSurface extends StatelessWidget {
         child: child,
       );
     }
-    return LiquidGlass.withOwnLayer(settings: _settings(context), shape: shape, shadows: _shadows, child: child);
+    return LiquidGlass.withOwnLayer(
+      settings: _settings(context, tintAmount: tintAmount),
+      shape: shape,
+      shadows: _shadows,
+      child: child,
+    );
   }
 }
 
