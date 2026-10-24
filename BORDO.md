@@ -45,7 +45,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 - [x] Rail orizzontale a capsula verticale (`mobile_navigation_rail.dart`, `BombGlassRail`)
 - [x] Titoli del player cliccabili: serie → pagina della serie; riga episodio → pagina dell'episodio (`video_controls_header.dart`)
 - [x] Copertina di stagione nella hero della home, solo in portrait (`discover_screen.dart`)
-- [ ] Sheet e menu a comparsa (`overlay_sheet.dart`): da decidere come con Riccardo
+- [x] Sheet e menu (su telefono passano da `OverlaySheet`): pannello di vetro flottante, angoli 28, tinta massima, secondo l'immagine di riferimento di Riccardo (2026-10-25). Il vetro solo sui cerchi dell'intestazione è stato provato e annullato ("stona con il resto"). Da vedere a occhio sul telefono
 - [ ] Barra del tempo del player, back della `BottomSheetHeader`, player desktop (`desktop_video_controls.dart`)
 - [ ] Pulsanti senza vetro in altre schermate, se segnalati
 
