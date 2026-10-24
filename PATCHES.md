@@ -70,3 +70,9 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 - Aggiornamento: margini laterali della barra 16 (prima 24), padding interno 8 e capsula di selezione 4 px più larga della voce: le etichette, che `NavigationLabelScale` adatta alla larghezza della voce, restano dentro la capsula.
 - Aggiornamento: altezza della barra 68 (prima 64) e capsula di selezione con 3 px di margine verticale (prima 6): il contenuto di una voce (icona nella zona da 32 px + testo) è alto circa 52 px e con 6 px di margine il testo toccava il bordo basso della capsula.
 - Aggiornamento: `labelPadding` della barra inferiore a `EdgeInsets.only(top: 1)` (default Material 4): etichetta più vicina all'icona. Solo in `lib/bomb/bomb_glass_nav_bar.dart`.
+
+### Sheet e menu come pannello di vetro (2026-10-25)
+Su telefono i menu a comparsa (`showAdaptiveAppMenu`) e le sheet passano tutti da `OverlaySheet`. Riferimento di stile: immagine di Riccardo (pannello staccato dai bordi, angoli molto arrotondati, forte sfocatura con tinta, bordo chiaro).
+- `lib/widgets/overlay_sheet.dart` (`_buildSheet`): il `Material` della sheet è avvolto in `BombGlassSheet` (nostro `lib/bomb/bomb_glass_sheet.dart`: margine laterale 16, distanza 12 + inset dal bordo, `BombGlassSurface(borderRadius: 28, tintAmount: 1)`); con il vetro attivo `Material` è trasparente con angoli 28 su tutti i lati e la `SafeArea` interna non aggiunge più l'inset (lo mette il pannello); 2 import. Righe marcate `BOMB`.
+- `lib/bomb/bomb_glass_surface.dart`: nuovo parametro `tintAmount` (posizione dello slider "Liquid Glass" del pacchetto, 1 = tinta e sfocatura massime).
+- Intestazione delle sheet: il tentativo con i due cerchi di vetro (chiusura e indietro) è stato annullato con un revert: stonava con il pannello.
