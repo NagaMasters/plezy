@@ -70,6 +70,3 @@ Widget condivisi toccati; ogni riga marcata `// BOMB`. Codice nuovo: `lib/bomb/b
 - Aggiornamento: margini laterali della barra 16 (prima 24), padding interno 8 e capsula di selezione 4 px più larga della voce: le etichette, che `NavigationLabelScale` adatta alla larghezza della voce, restano dentro la capsula.
 - Aggiornamento: altezza della barra 68 (prima 64) e capsula di selezione con 3 px di margine verticale (prima 6): il contenuto di una voce (icona nella zona da 32 px + testo) è alto circa 52 px e con 6 px di margine il testo toccava il bordo basso della capsula.
 - Aggiornamento: `labelPadding` della barra inferiore a `EdgeInsets.only(top: 1)` (default Material 4): etichetta più vicina all'icona. Solo in `lib/bomb/bomb_glass_nav_bar.dart`.
-
-### Intestazione delle sheet (2026-10-25)
-- `lib/widgets/bottom_sheet_header.dart`: il pulsante di chiusura è avvolto in `BombGlassSurface.circle(diameter: 48)`; la freccia indietro sta su un cerchio di vetro da 40 px (larghezza e posizione dell'area di tocco passano da `bombBackGlyphWidth(24)`); 2 import. Aiuti nostri in `lib/bomb/bomb_sheet_header.dart`. Il corpo delle sheet (`overlay_sheet.dart`) resta opaco e invariato.
