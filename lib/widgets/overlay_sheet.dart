@@ -9,6 +9,8 @@ import '../focus/dpad_navigator.dart';
 import '../focus/input_mode_tracker.dart';
 import '../focus/key_event_utils.dart';
 import '../utils/platform_detector.dart';
+import '../bomb/bomb_glass.dart'; // BOMB
+import '../bomb/bomb_glass_sheet.dart'; // BOMB
 
 /// Entry in the sheet page stack.
 class _OverlaySheetEntry {
@@ -803,14 +805,16 @@ class _OverlaySheetHostState extends State<OverlaySheetHost> with SingleTickerPr
                 right: !spansWidth,
                 top: false,
                 bottom: false,
-                child: Material(
+                child: BombGlassSheet( // BOMB: pannello di vetro flottante
+                  isTop: isTop,
+                  child: Material(
                   key: _sheetKey,
-                  color: _explicitBackgroundColor ?? colorScheme.surface,
-                  borderRadius: borderRadius,
+                  color: kBombGlassEnabled ? Colors.transparent : (_explicitBackgroundColor ?? colorScheme.surface), // BOMB
+                  borderRadius: kBombGlassEnabled ? BorderRadius.circular(bombSheetRadius) : borderRadius, // BOMB
                   clipBehavior: Clip.antiAlias,
                   child: SafeArea(
-                    top: isTop,
-                    bottom: !isTop,
+                    top: isTop && !kBombGlassEnabled, // BOMB
+                    bottom: !isTop && !kBombGlassEnabled, // BOMB
                     left: false,
                     right: false,
                     // Content is sized by the sheet body, so pushing a nested
@@ -828,6 +832,7 @@ class _OverlaySheetHostState extends State<OverlaySheetHost> with SingleTickerPr
                     ),
                   ),
                 ),
+                ), // BOMB
               ),
             ),
           ),
