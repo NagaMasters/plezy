@@ -2,13 +2,13 @@
 
 Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
 Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
-Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
+Ultimo aggiornamento: 2026-10-29 (base upstream 2.25.0, Release `bomb-2.25.0-4`).
 
 ---
 
 ## 1. Obiettivo e criteri di completamento
 
-**Obiettivo [D]**: fork personale di `edde746/plezy` (base: tag 2.24.0) con effetto Liquid Glass (`liquid_glass_renderer 1.0.0-dev.1`), facile da riallineare agli aggiornamenti upstream.
+**Obiettivo [D]**: fork personale di `edde746/plezy` (base iniziale: tag 2.24.0; dal 2026-10-27 tag 2.25.0, riallineato in automatico) con effetto Liquid Glass (`liquid_glass_renderer 1.0.0-dev.1`), facile da riallineare agli aggiornamenti upstream.
 **Perimetro originale**: solo la barra inferiore portrait. **Perimetro attuale [D]** (scelta di Riccardo, 2026-10-23): tutti i controlli flottanti (app bar, ricerca, chip, player mobile, barra inferiore e rail orizzontale), più tre funzioni: titoli del player cliccabili, copertina di stagione nella hero, ridisegno delle barre.
 **Principio guida [D]**: codice nuovo in `lib/bomb/`; nei file upstream solo agganci marcati `BOMB:` e registrati in `PATCHES.md`. Con l'estensione i file upstream toccati sono circa 20 (prima 3): più conflitti di rebase, rischio accettato.
 
@@ -17,8 +17,8 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 - [x] `flutter analyze` senza nuovi problemi rispetto al tag di partenza (49 sul tag 2.24.0 pulito, 49 sul nostro branch, tutti in `packages/*/test`)
 - [x] `flutter build apk --release` ok con `BOMB_GLASS=true` **e** `false` (entrambe rifatte dopo le estensioni: arm64 178,6 MB e 178,2 MB)
 - [x] rebase a secco su `upstream/main` (21 commit avanti al tag): prima del riposizionamento della riga di `pubspec.yaml` 1 conflitto banale (bump di `openwatchparty` sulla riga sopra); dopo, 0 conflitti. Risolto il conflitto, `pub get --enforce-lockfile` ok e `flutter analyze` pulito sui 23 file toccati
-- [~] checklist sul telefono eseguita da Riccardo: vetro, tema chiaro, banda offline, mini-player e fluidità nel player confermati; installazione accanto a Plezy ufficiale confermata; da guardare: aggiornamento di una Release sopra la precedente
-- [x] workflow `bomb-build` e `bomb-sync` funzionanti, secrets caricati (sync provato solo nel caso "già aggiornato")
+- [~] checklist sul telefono eseguita da Riccardo: vetro, tema chiaro, banda offline, mini-player e fluidità nel player confermati; installazione accanto a Plezy ufficiale confermata; Release 3 installata da Riccardo sopra la 2 (stessa firma); da confermare l'aggiornamento alla 2.25.0
+- [x] workflow `bomb-build` e `bomb-sync` funzionanti, secrets caricati: il sync ha fatto da solo il rebase 2.24.0 → 2.25.0 il 2026-10-27 senza conflitti (caso "conflitto → issue" mai provato; issue attivate sul fork il 2026-10-29)
 
 ## 2. Vincoli e preferenze
 
@@ -80,6 +80,9 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 | 2026-10-23 | `Bomb sync` (run 40032174220) | **[V]** riuscito: `BOMB_PAT` presente, fast-forward di `main`, base di `bomb` = ultimo tag = 2.24.0, nessuna azione. **[non provato]** rebase su un tag nuovo |
 | 2026-10-24 | Verifiche finali G1 | **[V]** build `false` ok; analyze 49 = 49 col tag; rebase a secco: 1 conflitto banale in `pubspec.yaml`, il resto pulito, compila; diff vs tag: solo `lib/bomb/*` e i file elencati in `PATCHES.md`. Prove sul telefono di Riccardo: tema chiaro, banda offline, mini-player e fluidità del player ok |
 | 2026-10-24 | Riga di `pubspec.yaml` spostata sotto `flutter_localizations` e fusa nel primo commit della dipendenza (storia di `bomb` riscritta, push forzato `--force-with-lease`; backup in `bomb-backup-prima-push-forzato`, locale e sul fork) | **[V]** contenuto identico al backup tranne quella riga; rebase a secco su `upstream/main` (21 commit avanti al tag): 0 conflitti su 27 commit. La Release `bomb-2.24.0-2` punta a un commit non più sul branch (resta scaricabile) |
+| 2026-10-25 | Release `bomb-2.24.0-3` (sheet e menu in vetro) | **[V]** run riuscito; APK arm64 firmato con la stessa chiave della build 2 (SHA-256 `02555cfe…a9dd2`); hash diversi dalla build 2 (stessa dimensione per l'allineamento); `versionCode` 2155 uguale alla build 2 (Android lo accetta, ma non è crescente) |
+| 2026-10-27 | Upstream pubblica 2.25.0: `Bomb sync` programmato fa il rebase da solo | **[V]** log: "Base attuale: 2.24.0, ultimo tag upstream: 2.25.0" → "Rebase riuscito"; push di `bomb` → `Bomb build` → Release `bomb-2.25.0-4`. APK arm64: stessa chiave, `it.bomb.plezyglass`, versionCode 2157, versionName 2.25.0. Sopra 2.25.0 restano 32 commit nostri, codice in `lib/bomb` e workflow identico a prima, 67 righe `BOMB` negli upstream come prima |
+| 2026-10-29 | Copia locale riallineata al fork | **[V]** `bomb` locale = `origin/bomb` (il rebase in CI aveva cambiato gli ID); copia del vecchio stato in `bomb-locale-prima-di-2.25.0` (solo locale). Issue attivate sul fork (erano spente: il sync non avrebbe potuto segnalare conflitti) |
 | 2026-10-23 | Prova visiva | **[non fatta da me]** Riccardo ha visto vetro, forme, rail e player e ha confermato "così va bene" su più punti; mancano tema chiaro e le verifiche di §1 |
 
 **Tabella file caldi (commit upstream dal 2026-06-01, base 2.24.0)**
@@ -150,6 +153,8 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 - File upstream molto attivi toccati (`discover_screen.dart` 61 commit, `video_controls_header.dart` e altri nel player): conflitti attesi a ogni rebase.
 - Scambio Brotherhood/2003 visto una volta: non riprodotto, causa ignota.
 
+**Rami di sicurezza da cancellare quando Riccardo è tranquillo**: `bomb-backup-prima-push-forzato` (locale e fork), `bomb-locale-prima-di-2.25.0` (locale). Release vecchie `bomb-2.24.0-2` e `-3` cancellabili.
+
 **Domande aperte per Riccardo**
 - Come vuole le sheet e i menu a comparsa (vetro a tutta sheet o solo header/pulsanti)?
 - Ok al primo push di `bomb` e `main`, a impostare `bomb` come branch predefinito del fork e a disattivare i workflow upstream?
@@ -157,7 +162,7 @@ Ultimo aggiornamento: 2026-10-23, dopo il commit `600395411`.
 
 ## 7. Stato attuale e prossima azione
 
-**Stato**: barra inferiore (selezione che include icona e testo) e rail orizzontale a capsula; comandi del player in vetro trasparente non campionato; workflow `bomb-build` e `bomb-sync` scritti ma non eseguiti; controlli flottanti, chip e player mobile in vetro; titoli del player cliccabili; copertina di stagione nella hero. Tutto compila e gira sul telefono (ultimo commit `4bef59ab7`, build pulita installata). 16 commit locali su `bomb` rispetto al tag 2.24.0, **nessun push**. Workflow CI, keystore e secrets non fatti.
+**Stato (2026-10-29)**: fork pubblicato e in manutenzione automatica. Base upstream 2.25.0 (riallineata da sola il 2026-10-27). Vetro su: barre di navigazione (capsula in basso con selezione che include icona e testo, rail orizzontale), controlli flottanti, ricerca, chip, riga azioni del dettaglio, sheet e menu (pannello flottante), comandi del player (superficie trasparente non campionata). Funzioni: titoli del player cliccabili, copertina di stagione nella hero. Ultima Release: `bomb-2.25.0-4`. Verifiche G1 fatte (build true/false, analyze = tag, rebase a secco pulito).
 **Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
-**Prossima azione (aggiornata)**: installare l'APK della Release sul telefono (prima disinstallare Plezy Glass locale: firma diversa). Ora ogni push su `bomb` pubblica una nuova Release: usare `[skip ci]` per i commit solo di documentazione. Poi: Riccardo genera keystore e `BOMB_PAT` e dà l'ok al push (E5–E6); poi prima esecuzione dei workflow e correzioni, le rifiniture grafiche rimaste e G1 (criteri finali, compresa la build con `BOMB_GLASS=false` e il rebase a secco aggiornati).
+**Prossima azione**: Riccardo installa `bomb-2.25.0-4` sopra la versione firmata e conferma che dati e login restano. Facoltativo: `versionCode` crescente a ogni Release (1 riga in `bomb-build.yml`), barra del tempo del player, player desktop, rail orizzontale con rifrazione.
