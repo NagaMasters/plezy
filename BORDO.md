@@ -156,7 +156,7 @@ Ultimo aggiornamento: 2026-10-29 sera (controllo degli aggiornamenti upstream do
 
 **Rischi**
 - File upstream molto attivi toccati (`discover_screen.dart` 61 commit, `video_controls_header.dart` e altri nel player): conflitti attesi a ogni rebase.
-- Scambio Brotherhood/2003 visto una volta: non riprodotto, causa ignota.
+- Scambio Brotherhood/2003 (problema noto, non risolto): toccando la hero della home appena aperta l'app **la prima volta dopo un aggiornamento**, si apre Fullmetal Alchemist (2003) invece di Brotherhood; dalle aperture successive va bene (Riccardo, 2026-10-29). Ipotesi non verificata: all'avvio la lista "continua a guardare" arriva dalla cache e viene sostituita da quella fresca, con ordine diverso; per un istante l'immagine (con dissolvenza, e con la nostra copertina di stagione ferma) e la pagina toccata non coincidono. Il codice del tocco è quello originale di upstream. Su BOMBFLIX Brotherhood è in due librerie e la 2003 è in "continua a guardare" dopo le prove del 23. Per indagare: log temporaneo sul tocco della hero (versione Dev) alla prima apertura dopo un aggiornamento.
 
 **Rami di sicurezza da cancellare quando Riccardo è tranquillo**: `bomb-backup-prima-push-forzato` (locale e fork), `bomb-locale-prima-di-2.25.0` (locale). Release vecchie `bomb-2.24.0-2` e `-3` cancellabili.
 
