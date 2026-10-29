@@ -119,7 +119,11 @@ jobs:
         run: flutter analyze lib/bomb
 
       - name: Build APKs
-        run: flutter build apk --release --split-per-abi --dart-define=BOMB_GLASS=true
+        run: |
+          # versionCode crescente a ogni build: build number upstream + numero del run
+          upstream_build=$(grep -m1 '^version:' pubspec.yaml | sed -E 's/.*\+//')
+          flutter build apk --release --split-per-abi --dart-define=BOMB_GLASS=true \
+            --build-number=$((upstream_build + GITHUB_RUN_NUMBER))
 
       - name: Clean up keystore
         if: always()

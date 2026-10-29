@@ -173,9 +173,12 @@ Ultimo aggiornamento: 2026-10-29, chiusura della sessione (base upstream 2.25.0,
 ## 7. Stato attuale e prossima azione
 
 **Stato (2026-10-29, fine sessione)**: fork pubblicato e in manutenzione automatica. Base upstream 2.25.0 (riallineata da sola il 2026-10-27). Vetro su: barre di navigazione (capsula in basso con selezione che include icona e testo, rail orizzontale), controlli flottanti, ricerca, chip, riga azioni del dettaglio, sheet e menu (pannello flottante), comandi del player (superficie trasparente non campionata). Funzioni: titoli del player cliccabili, copertina di stagione nella hero. Ultima Release: `bomb-2.25.0-4`. Verifiche G1 fatte (build true/false, analyze = tag, rebase a secco pulito).
-**Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
+**Base upstream**: 2.25.0 [V, controllato 2026-10-29: nessun tag più recente; la riga precedente "2.24.0" era obsoleta]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
+
+**Aggiornamento 2026-10-29 (sessione successiva)**: confronto BORDO/stato reale: `bomb` = `origin/bomb`, base 2.25.0, nessuna release upstream nuova, ultima Release `bomb-2.25.0-4` [V]; unica discrepanza: riga "Base upstream 2.24.0" (corretta). Attività 1 e 2 bloccate (serve una release upstream / la prova di Riccardo): non ripetute. Fatto il punto 3 `versionCode` crescente in `bomb-build.yml`: `--build-number = build number di pubspec (157) + GITHUB_RUN_NUMBER` (decisione [I]; con run 5 → 162, sempre sopra il 157 attuale). **[V]** YAML valido e calcolo provato in locale; **[non verificato]** esecuzione su GitHub: commit locale, **non pushato** (il push su `bomb` fa partire una build e una Release: serve ok di Riccardo).
 
 **Prossima azione (alla ripresa)**
+0. Chiedere a Riccardo l'ok per pushare il commit del `versionCode`; dopo il run, controllare con `aapt` che il `versionCode` dell'APK arm64 sia > 2157.
 1. Alla prossima release upstream: controllare che il sync abbia fatto il rebase da solo e che la Release parta; agganciare il nuovo pulsante di sblocco dello schermo del player (`screen_lock_overlay.dart`) alla superficie trasparente; guardare il chip della nuova scheda Generi.
 2. Luminosità/volume: esito della prova di Riccardo vicino ai bordi; eventuale allargamento della zona.
 3. Facoltativi: `versionCode` crescente a ogni Release (1 riga in `bomb-build.yml`), barra del tempo del player, player desktop, rail orizzontale con rifrazione, indagine sul problema noto della hero dopo un aggiornamento.
