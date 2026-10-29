@@ -2,7 +2,7 @@
 
 Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
 Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
-Ultimo aggiornamento: 2026-10-29 (base upstream 2.25.0, Release `bomb-2.25.0-4`).
+Ultimo aggiornamento: 2026-10-29 sera (controllo degli aggiornamenti upstream dopo 2.25.0).
 
 ---
 
@@ -83,6 +83,7 @@ Ultimo aggiornamento: 2026-10-29 (base upstream 2.25.0, Release `bomb-2.25.0-4`)
 | 2026-10-25 | Release `bomb-2.24.0-3` (sheet e menu in vetro) | **[V]** run riuscito; APK arm64 firmato con la stessa chiave della build 2 (SHA-256 `02555cfe…a9dd2`); hash diversi dalla build 2 (stessa dimensione per l'allineamento); `versionCode` 2155 uguale alla build 2 (Android lo accetta, ma non è crescente) |
 | 2026-10-27 | Upstream pubblica 2.25.0: `Bomb sync` programmato fa il rebase da solo | **[V]** log: "Base attuale: 2.24.0, ultimo tag upstream: 2.25.0" → "Rebase riuscito"; push di `bomb` → `Bomb build` → Release `bomb-2.25.0-4`. APK arm64: stessa chiave, `it.bomb.plezyglass`, versionCode 2157, versionName 2.25.0. Sopra 2.25.0 restano 32 commit nostri, codice in `lib/bomb` e workflow identico a prima, 67 righe `BOMB` negli upstream come prima |
 | 2026-10-29 | Copia locale riallineata al fork | **[V]** `bomb` locale = `origin/bomb` (il rebase in CI aveva cambiato gli ID); copia del vecchio stato in `bomb-locale-prima-di-2.25.0` (solo locale). Issue attivate sul fork (erano spente: il sync non avrebbe potuto segnalare conflitti) |
+| 2026-10-29 | Controllo upstream dopo 2.25.0 | **[V]** nessun nuovo tag di release (ultimo 2.25.0, già la nostra base). `upstream/main` avanti di 9 commit non rilasciati: rebase a secco dei nostri 33 commit su `upstream/main` **senza conflitti**; `pub get --enforce-lockfile` ok; `flutter analyze` pulito sui 25 file toccati. Unico file in comune: `discover_screen.dart` (upstream mette `IgnorePointer` sui badge della barra azioni, lontano dal nostro aggancio sulla hero). Le 6 stringhe sostituite dalla CI ci sono ancora; `FLUTTER_VERSION` sempre 3.47.1. Riccardo ha installato `bomb-2.25.0-4` sopra la versione firmata: tutto a posto |
 | 2026-10-23 | Prova visiva | **[non fatta da me]** Riccardo ha visto vetro, forme, rail e player e ha confermato "così va bene" su più punti; mancano tema chiaro e le verifiche di §1 |
 
 **Tabella file caldi (commit upstream dal 2026-06-01, base 2.24.0)**
@@ -148,6 +149,10 @@ Ultimo aggiornamento: 2026-10-29 (base upstream 2.25.0, Release `bomb-2.25.0-4`)
 - Tema chiaro; fluidità nel player con più layer attivi.
 - Valori della capsula (decisione 11).
 - Rail orizzontale: i contenuti stanno accanto, non dietro, quindi poca rifrazione.
+
+**Da fare alla prossima release upstream (oggi solo su `upstream/main`)**
+- Nuovo pulsante di sblocco dello schermo nel player (`lib/widgets/video_controls/widgets/screen_lock_overlay.dart`, commit `1fc16b6c1`): pillola nera al 60% con angoli 28 sopra il video, stona con i nostri comandi del player. Quando arriva nella base, aggancio di 1-2 righe con `BombGlassSurface(clear: true)` per lo stato normale (lo stato "armato" bianco resta).
+- Nuova scheda Generi nelle librerie (commit `ffe7d792d`): il suo chip passa da `FocusableTabChip`, quindi avrà già il vetro; la griglia dei generi non è un elemento flottante. Da guardare a occhio.
 
 **Rischi**
 - File upstream molto attivi toccati (`discover_screen.dart` 61 commit, `video_controls_header.dart` e altri nel player): conflitti attesi a ogni rebase.
