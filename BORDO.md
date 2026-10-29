@@ -2,7 +2,7 @@
 
 Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
 Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
-Ultimo aggiornamento: 2026-10-29 sera (controllo degli aggiornamenti upstream dopo 2.25.0).
+Ultimo aggiornamento: 2026-10-29, chiusura della sessione (base upstream 2.25.0, ultima Release `bomb-2.25.0-4`, installata da Riccardo).
 
 ---
 
@@ -154,6 +154,11 @@ Ultimo aggiornamento: 2026-10-29 sera (controllo degli aggiornamenti upstream do
 - Nuovo pulsante di sblocco dello schermo nel player (`lib/widgets/video_controls/widgets/screen_lock_overlay.dart`, commit `1fc16b6c1`): pillola nera al 60% con angoli 28 sopra il video, stona con i nostri comandi del player. Quando arriva nella base, aggancio di 1-2 righe con `BombGlassSurface(clear: true)` per lo stato normale (lo stato "armato" bianco resta).
 - Nuova scheda Generi nelle librerie (commit `ffe7d792d`): il suo chip passa da `FocusableTabChip`, quindi avrà già il vetro; la griglia dei generi non è un elemento flottante. Da guardare a occhio.
 
+**Richiesta aperta: luminosità e volume con scorrimento verticale nel player (2026-10-29)**
+- La funzione **esiste già in upstream** ed è attiva per default (`SettingsService.gestureBrightnessSwipe` e `gestureVolumeSwipe`, entrambe `true`): bordo sinistro = luminosità, bordo destro = volume (`lib/widgets/video_controls/parts/playback_input.dart`, `helpers/mobile_edge_adjustment_tracker.dart`).
+- Si attiva solo in una striscia vicino ai bordi: larghezza `max(48, min(14% della larghezza, 96))` px (`mobileEdgeAdjustmentZoneWidth`), esclusa la fascia alta e bassa (`mobileSkipZoneDimensions`); spenta con schermo bloccato, PiP attivo o striscia dei contenuti aperta.
+- Da fare: Riccardo prova a scorrere molto vicino ai bordi e controlla le impostazioni del player. Se vuole la metà sinistra/destra dello schermo invece della striscia, va allargata la zona in `mobileEdgeAdjustmentZoneWidth` (file del player, molto attivo in upstream: aggancio minimo in `lib/bomb/`). Nessuna modifica fatta.
+
 **Rischi**
 - File upstream molto attivi toccati (`discover_screen.dart` 61 commit, `video_controls_header.dart` e altri nel player): conflitti attesi a ogni rebase.
 - Scambio Brotherhood/2003 (problema noto, non risolto): toccando la hero della home appena aperta l'app **la prima volta dopo un aggiornamento**, si apre Fullmetal Alchemist (2003) invece di Brotherhood; dalle aperture successive va bene (Riccardo, 2026-10-29). Ipotesi non verificata: all'avvio la lista "continua a guardare" arriva dalla cache e viene sostituita da quella fresca, con ordine diverso; per un istante l'immagine (con dissolvenza, e con la nostra copertina di stagione ferma) e la pagina toccata non coincidono. Il codice del tocco è quello originale di upstream. Su BOMBFLIX Brotherhood è in due librerie e la 2003 è in "continua a guardare" dopo le prove del 23. Per indagare: log temporaneo sul tocco della hero (versione Dev) alla prima apertura dopo un aggiornamento.
@@ -167,7 +172,11 @@ Ultimo aggiornamento: 2026-10-29 sera (controllo degli aggiornamenti upstream do
 
 ## 7. Stato attuale e prossima azione
 
-**Stato (2026-10-29)**: fork pubblicato e in manutenzione automatica. Base upstream 2.25.0 (riallineata da sola il 2026-10-27). Vetro su: barre di navigazione (capsula in basso con selezione che include icona e testo, rail orizzontale), controlli flottanti, ricerca, chip, riga azioni del dettaglio, sheet e menu (pannello flottante), comandi del player (superficie trasparente non campionata). Funzioni: titoli del player cliccabili, copertina di stagione nella hero. Ultima Release: `bomb-2.25.0-4`. Verifiche G1 fatte (build true/false, analyze = tag, rebase a secco pulito).
+**Stato (2026-10-29, fine sessione)**: fork pubblicato e in manutenzione automatica. Base upstream 2.25.0 (riallineata da sola il 2026-10-27). Vetro su: barre di navigazione (capsula in basso con selezione che include icona e testo, rail orizzontale), controlli flottanti, ricerca, chip, riga azioni del dettaglio, sheet e menu (pannello flottante), comandi del player (superficie trasparente non campionata). Funzioni: titoli del player cliccabili, copertina di stagione nella hero. Ultima Release: `bomb-2.25.0-4`. Verifiche G1 fatte (build true/false, analyze = tag, rebase a secco pulito).
 **Base upstream**: 2.24.0 [V]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
-**Prossima azione**: Riccardo installa `bomb-2.25.0-4` sopra la versione firmata e conferma che dati e login restano. Facoltativo: `versionCode` crescente a ogni Release (1 riga in `bomb-build.yml`), barra del tempo del player, player desktop, rail orizzontale con rifrazione.
+**Prossima azione (alla ripresa)**
+1. Alla prossima release upstream: controllare che il sync abbia fatto il rebase da solo e che la Release parta; agganciare il nuovo pulsante di sblocco dello schermo del player (`screen_lock_overlay.dart`) alla superficie trasparente; guardare il chip della nuova scheda Generi.
+2. Luminosità/volume: esito della prova di Riccardo vicino ai bordi; eventuale allargamento della zona.
+3. Facoltativi: `versionCode` crescente a ogni Release (1 riga in `bomb-build.yml`), barra del tempo del player, player desktop, rail orizzontale con rifrazione, indagine sul problema noto della hero dopo un aggiornamento.
+4. Pulizia quando Riccardo vuole: rami `bomb-backup-prima-push-forzato` (locale e fork) e `bomb-locale-prima-di-2.25.0` (locale), Release `bomb-2.24.0-2` e `-3`, app Plezy Glass Dev sul telefono.
