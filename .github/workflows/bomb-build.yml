@@ -19,7 +19,7 @@ concurrency:
 
 env:
   BOMB_APP_ID: it.bomb.plezyglass
-  BOMB_APP_NAME: Plezy Glass
+  BOMB_APP_NAME: Bombflix
 
 jobs:
   build:
@@ -115,6 +115,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get --enforce-lockfile --no-example
 
+      - name: Rename Plezy to ${{ env.BOMB_APP_NAME }} in visible texts
+        run: |
+          python3 lib/bomb/tool/rename_brand.py "$BOMB_APP_NAME"
+          dart run slang
+
       - name: Analyze our code
         run: flutter analyze lib/bomb
 
@@ -141,5 +146,5 @@ jobs:
           done
           gh release create "$tag" dist/*.apk \
             --target "$GITHUB_SHA" \
-            --title "Plezy Glass ${version} (build ${GITHUB_RUN_NUMBER})" \
+            --title "${BOMB_APP_NAME} ${version} (build ${GITHUB_RUN_NUMBER})" \
             --notes "Fork con Liquid Glass basato su Plezy ${version}. Commit ${GITHUB_SHA}."
