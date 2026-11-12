@@ -5,6 +5,8 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../i18n/strings.g.dart';
 import '../../app_icon.dart';
+import '../../../bomb/bomb_glass.dart'; // BOMB
+import '../../../bomb/bomb_glass_surface.dart'; // BOMB
 
 enum _UnlockPrompt { hidden, shown, armed }
 
@@ -141,10 +143,13 @@ class _ScreenLockOverlayState extends State<ScreenLockOverlay> {
                           // so holding the button never resolves as a tap.
                           onLongPress: () {},
                           child: ExcludeSemantics(
-                            child: Container(
+                            child: BombGlassSurface( // BOMB: vetro trasparente come gli altri comandi del player
+                              borderRadius: 28,
+                              clear: true,
+                              child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                               decoration: BoxDecoration(
-                                color: armed ? Colors.white : Colors.black.withValues(alpha: 0.6),
+                                color: armed ? Colors.white : (kBombGlassEnabled ? null : Colors.black.withValues(alpha: 0.6)), // BOMB
                                 borderRadius: const BorderRadius.all(Radius.circular(28)),
                               ),
                               child: Row(
@@ -163,6 +168,7 @@ class _ScreenLockOverlayState extends State<ScreenLockOverlay> {
                                   ),
                                 ],
                               ),
+                              ), // BOMB
                             ),
                           ),
                         ),

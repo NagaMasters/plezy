@@ -85,3 +85,6 @@ Nessun file upstream toccato: tutto in CI (`bomb-build.yml`) e in `lib/bomb/tool
 
 ### Rebase 2.26.0 (2026-11-11)
 `lib/widgets/mobile_navigation_rail.dart`: conflitto sugli import (upstream `navigation_label_fit.dart`, noi `../bomb/bomb_glass_rail.dart`); tenuti entrambi. Il resto del file si è fuso da solo.
+
+### Pulsante di sblocco schermo in vetro (2026-11-12)
+- `lib/widgets/video_controls/widgets/screen_lock_overlay.dart`: la pillola (`Container`, angoli 28) è avvolta in `BombGlassSurface(borderRadius: 28, clear: true)`, come gli altri comandi del player; con `BOMB_GLASS=false` resta nera al 60%. Lo stato armato (bianco, testo nero) è invariato: il bianco pieno copre il velo. 2 import marcati `BOMB`.
