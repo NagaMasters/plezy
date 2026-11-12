@@ -2,7 +2,7 @@
 
 Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
 Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
-Ultimo aggiornamento: 2026-11-12, controllo finale (base upstream 2.26.0, ultima Release `bomb-2.26.0-6` "Bombflix", installata da Riccardo sul telefono).
+Ultimo aggiornamento: 2026-11-12, controllo finale (base upstream 2.26.0, ultima Release `bomb-2.26.0-7` "Bombflix", installata da Riccardo sul telefono).
 
 ---
 
@@ -172,7 +172,7 @@ Ultimo aggiornamento: 2026-11-12, controllo finale (base upstream 2.26.0, ultima
 
 ## 7. Stato attuale e prossima azione
 
-**Stato (2026-11-12)**: fork in manutenzione automatica. Base upstream 2.26.0 (rebase risolto a mano l'11/11: 1 conflitto negli import di `mobile_navigation_rail.dart`; il sync del 12/11 è tornato verde). App ribattezzata **Bombflix** (testi, label, titolo Release; fatto in CI). Vetro su barre di navigazione, controlli flottanti, ricerca, chip, riga azioni, sheet e menu, comandi del player. Funzioni: titoli del player cliccabili, copertina di stagione nella hero. Ultima Release `bomb-2.26.0-6` (versionCode 2166, crescente). Fork: nessuna issue aperta, copia locale `plezy` = `origin/bomb`, pulita.
+**Stato (2026-11-12)**: fork in manutenzione automatica. Base upstream 2.26.0 (rebase risolto a mano l'11/11: 1 conflitto negli import di `mobile_navigation_rail.dart`; il sync del 12/11 è tornato verde). App ribattezzata **Bombflix** (testi, label, titolo Release; fatto in CI). Vetro su barre di navigazione, controlli flottanti, ricerca, chip, riga azioni, sheet e menu, comandi del player. Funzioni: titoli del player cliccabili, copertina di stagione nella hero. Ultima Release `bomb-2.26.0-7` (versionCode 2167, crescente). Fork: nessuna issue aperta, copia locale `plezy` = `origin/bomb`, pulita.
 **Base upstream**: 2.26.0 [V, 2026-11-12: nessun tag più recente; `upstream/main` avanti di 7 commit non rilasciati]. **liquid_glass_renderer**: 1.0.0-dev.1 [V].
 
 **Aggiornamento 2026-10-29 (sessione successiva)**: confronto BORDO/stato reale: `bomb` = `origin/bomb`, base 2.25.0, nessuna release upstream nuova, ultima Release `bomb-2.25.0-4` [V]; unica discrepanza: riga "Base upstream 2.24.0" (corretta). Attività 1 e 2 bloccate (serve una release upstream / la prova di Riccardo): non ripetute. Fatto il punto 3 `versionCode` crescente in `bomb-build.yml`: `--build-number = build number di pubspec (157) + GITHUB_RUN_NUMBER` (decisione [I]; con run 5 → 162, sempre sopra il 157 attuale). **[V]** YAML valido e calcolo provato in locale; **[V]** pushato con ok di Riccardo (il commit ha `[skip ci]`, quindi build avviata a mano: run 40970066711 riuscito, Release `bomb-2.25.0-5`); APK arm64 scaricato: `it.bomb.plezyglass`, `versionCode` 2162 (> 2157), versionName 2.25.0.
@@ -183,7 +183,7 @@ Ultimo aggiornamento: 2026-11-12, controllo finale (base upstream 2.26.0, ultima
 
 **Esito 2026-11-11 [V]**: con ok di Riccardo, backup del vecchio `bomb` nel ramo `bomb-backup-prima-di-2.26.0` (fork) e push forzato di `bomb` (base 2.26.0 + 40 commit nostri). `Bomb build` run 42953931685 riuscito → Release `bomb-2.26.0-6` ("Bombflix 2.26.0"). APK arm64: `it.bomb.plezyglass`, versionCode 2166 (> 2162), versionName 2.26.0, label `Bombflix` (anche it). Installato con `adb install -r` sul SM-S931B (Success, aggiornamento sopra la 2.25.0), `PlezyActivity` in primo piano, processo vivo; nessun crash della nostra app nel log (un tombstone è del servizio camera Samsung). **[non verificato da me]** testi in-app (schermata con "Bombflix" al posto di "Plezy"), tema e vetro dopo 2.26.0: li guarda Riccardo. La copia `plezy` ha `bomb` ancora sul vecchio stato e file `build/` cancellati: lavorare nel worktree `plezy-rebase` (branch `bomb-2.26` = `origin/bomb`) o riallineare `plezy` con `git fetch && git reset --hard origin/bomb` (decisione di Riccardo). Da pulire: rami `bomb-backup-prima-di-2.26.0` e Release vecchie.
 
-**Pulsante di sblocco schermo (2026-11-12, scelta di Riccardo "si vai")**: `screen_lock_overlay.dart` ora in `BombGlassSurface(clear: true, borderRadius: 28)`, stato armato invariato (decisione [I]). **[V]** `flutter analyze` pulito sul file. **[non verificato]** resa sul telefono (leggibilità del testo bianco sul video): da guardare con lo schermo bloccato.
+**Pulsante di sblocco schermo (2026-11-12, scelta di Riccardo "si vai")**: `screen_lock_overlay.dart` ora in `BombGlassSurface(clear: true, borderRadius: 28)`, stato armato invariato (decisione [I]). **[V]** `flutter analyze` pulito sul file. Build CI riuscita (run 43269925135) → Release `bomb-2.26.0-7`, versionCode 2167; installata con `adb install -r` sul SM-S931B (Success), app avviata, processo vivo, nessun FATAL EXCEPTION. **[non verificato]** resa a occhio (leggibilità del testo bianco sul video): da guardare con lo schermo bloccato.
 
 **Prossima azione (alla ripresa)**
 0. (Fatto 2026-11-12 [V]) Copia `plezy` riallineata: `bomb` = `origin/bomb`, albero pulito, worktree `plezy-rebase` e branch `bomb-2.26` rimossi. Vecchia storia nel ramo locale `bomb-locale-prima-di-2.26.0` e sul fork in `bomb-backup-prima-di-2.26.0`.
