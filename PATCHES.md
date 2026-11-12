@@ -76,3 +76,12 @@ Su telefono i menu a comparsa (`showAdaptiveAppMenu`) e le sheet passano tutti d
 - `lib/widgets/overlay_sheet.dart` (`_buildSheet`): il `Material` della sheet è avvolto in `BombGlassSheet` (nostro `lib/bomb/bomb_glass_sheet.dart`: margine laterale 16, distanza 12 + inset dal bordo, `BombGlassSurface(borderRadius: 28, tintAmount: 1)`); con il vetro attivo `Material` è trasparente con angoli 28 su tutti i lati e la `SafeArea` interna non aggiunge più l'inset (lo mette il pannello); 2 import. Righe marcate `BOMB`.
 - `lib/bomb/bomb_glass_surface.dart`: nuovo parametro `tintAmount` (posizione dello slider "Liquid Glass" del pacchetto, 1 = tinta e sfocatura massime).
 - Intestazione delle sheet: il tentativo con i due cerchi di vetro (chiusura e indietro) è stato annullato con un revert: stonava con il pannello.
+
+### Nome Bombflix e versionCode (2026-11-12)
+Nessun file upstream toccato: tutto in CI (`bomb-build.yml`) e in `lib/bomb/tool/rename_brand.py`.
+- Passo "Rename Plezy": sostituisce "Plezy" nei valori di `lib/i18n/*.i18n.json` (chiavi intatte) e rigenera con `dart run slang`; fallisce se `en.i18n.json` non ha occorrenze.
+- `BOMB_APP_NAME=Bombflix`: label sotto l'icona e titolo della Release. Volutamente non cambiati: `product: 'Plezy'` verso Plex, namespace `'Plezy'` dei DisplayPreferences Jellyfin, log di avvio.
+- `flutter build apk --build-number = build di pubspec + GITHUB_RUN_NUMBER` (versionCode crescente).
+
+### Rebase 2.26.0 (2026-11-11)
+`lib/widgets/mobile_navigation_rail.dart`: conflitto sugli import (upstream `navigation_label_fit.dart`, noi `../bomb/bomb_glass_rail.dart`); tenuti entrambi. Il resto del file si è fuso da solo.
