@@ -2,7 +2,7 @@
 
 Fonte: `prompt-plezy-liquid-glass.md` (i riferimenti §N rimandano a quel file). Mappa delle modifiche agli upstream: `PATCHES.md`.
 Legenda: **[D]** = decisione di Riccardo · **[I]** = ipotesi o scelta mia, da confermare · **[V]** = verificato con un comando o un log.
-Ultimo aggiornamento: 2026-11-12, controllo finale (base upstream 2.26.0, ultima Release `bomb-2.26.0-7` "Bombflix", installata da Riccardo sul telefono).
+Ultimo aggiornamento: 2026-11-15, chiusura della sessione (base upstream 2.26.0, ultima Release `bomb-2.26.0-7` "Bombflix", installata sul telefono; sync del 14 e 15/11 verdi).
 
 ---
 
@@ -184,6 +184,8 @@ Ultimo aggiornamento: 2026-11-12, controllo finale (base upstream 2.26.0, ultima
 **Esito 2026-11-11 [V]**: con ok di Riccardo, backup del vecchio `bomb` nel ramo `bomb-backup-prima-di-2.26.0` (fork) e push forzato di `bomb` (base 2.26.0 + 40 commit nostri). `Bomb build` run 42953931685 riuscito → Release `bomb-2.26.0-6` ("Bombflix 2.26.0"). APK arm64: `it.bomb.plezyglass`, versionCode 2166 (> 2162), versionName 2.26.0, label `Bombflix` (anche it). Installato con `adb install -r` sul SM-S931B (Success, aggiornamento sopra la 2.25.0), `PlezyActivity` in primo piano, processo vivo; nessun crash della nostra app nel log (un tombstone è del servizio camera Samsung). **[non verificato da me]** testi in-app (schermata con "Bombflix" al posto di "Plezy"), tema e vetro dopo 2.26.0: li guarda Riccardo. La copia `plezy` ha `bomb` ancora sul vecchio stato e file `build/` cancellati: lavorare nel worktree `plezy-rebase` (branch `bomb-2.26` = `origin/bomb`) o riallineare `plezy` con `git fetch && git reset --hard origin/bomb` (decisione di Riccardo). Da pulire: rami `bomb-backup-prima-di-2.26.0` e Release vecchie.
 
 **Pulsante di sblocco schermo (2026-11-12, scelta di Riccardo "si vai")**: `screen_lock_overlay.dart` ora in `BombGlassSurface(clear: true, borderRadius: 28)`, stato armato invariato (decisione [I]). **[V]** `flutter analyze` pulito sul file. Build CI riuscita (run 43269925135) → Release `bomb-2.26.0-7`, versionCode 2167; installata con `adb install -r` sul SM-S931B (Success), app avviata, processo vivo, nessun FATAL EXCEPTION. **[non verificato]** resa a occhio (leggibilità del testo bianco sul video): da guardare con lo schermo bloccato.
+
+**Chiusura sessione 2026-11-15 [V]**: `origin/bomb` = `plezy` locale (`104afbdcb` + questo commit), nessuna issue aperta, nessun tag upstream oltre 2.26.0. Non committati di proposito: 7 file `generated_plugin_registrant*` / `generated_plugins.cmake` (linux, macos, windows) che `flutter pub get` rigenera, differenza solo di fine riga (LF/CRLF), nessun contenuto: sono file upstream, la regola 2 vieta di riformattarli; ignorarli o ripristinarli con `git checkout -- linux/flutter macos/Flutter windows/flutter` (decisione di Riccardo). Sessione di un'altra app (BombSuite/SeriesCatalog) ha scritto per errore a questa sessione: ignorata, nessuna azione.
 
 **Prossima azione (alla ripresa)**
 0. (Fatto 2026-11-12 [V]) Copia `plezy` riallineata: `bomb` = `origin/bomb`, albero pulito, worktree `plezy-rebase` e branch `bomb-2.26` rimossi. Vecchia storia nel ramo locale `bomb-locale-prima-di-2.26.0` e sul fork in `bomb-backup-prima-di-2.26.0`.
